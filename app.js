@@ -32,13 +32,15 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes (each teammate adds theirs here)
+// Routes 
 const authRoutes = require('./routes/authRoutes');
+app.use('/', authRoutes);
+
 const gameRoutes = require('./routes/gameRoutes');
 const borrowRoutes = require('./routes/borrowRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 
-app.use('/', authRoutes);
+
 app.use('/games', gameRoutes);
 app.use('/borrow', borrowRoutes);
 app.use('/search', searchRoutes);

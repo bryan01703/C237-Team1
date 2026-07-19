@@ -36,14 +36,14 @@ app.use((req, res, next) => {
 const authRoutes = require('./routes/authRoutes');
 app.use('/', authRoutes);
 
-const gameRoutes = require('./routes/gameRoutes');
-const borrowRoutes = require('./routes/borrowRoutes');
-const searchRoutes = require('./routes/searchRoutes');
+const gameroutes = require('./routes/gameroutes');
+const borrowroutes = require('./routes/borrowroutes');
+const searchroutes = require('./routes/searchroutes');
 
 
-app.use('/games', gameRoutes);
-app.use('/borrow', borrowRoutes);
-app.use('/search', searchRoutes);
+app.use('/games', gameroutes);
+app.use('/borrow', borrowroutes);
+app.use('/search', searchroutes);
 
 // 404 handler
 app.use((req, res) => {

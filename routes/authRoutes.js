@@ -1,4 +1,4 @@
-const { isAdmin } = require('../middleware/authMiddleware');
+const { isAdmin, isLoggedIn } = require('../middleware/authMiddleware');
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
@@ -100,7 +100,7 @@ router.get('/admin/users/edit/:id', isAdmin, async (req, res) => {
             req.flash('error', 'User not found');
             return res.redirect('/admin/users');
         }
-        res.render('admin/editUser', { user: rows[0] });
+        res.render('admin/editusers', { user: rows[0] });
     } catch (err) {
         console.error(err);
         res.redirect('/admin/users');
@@ -122,6 +122,19 @@ router.post('/admin/users/edit/:id', isAdmin, async (req, res) => {
         req.flash('error', 'Failed to update user');
         res.redirect('/admin/users');
     }
+});
+
+//public landing page 
+router.get('/', (req, res) => {
+    if (req.session.user) {
+        return res.redirect('/dashboard');
+    }
+    res.render('home');
+});
+
+// dashboard post login
+router.get('/dashboard', isLoggedIn, (req, res) => {
+    res.render('dashboard');
 });
 
 module.exports = router;

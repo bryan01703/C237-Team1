@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - GameNight</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>GameNight</h1>
+        <nav>
+            <span>Hi, <%= user.username %> (<%= user.role %>)</span>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <div class="card-grid">
+        <a href="/games" class="card">🎲<br>Browse Games</a>
+        <a href="/borrow/mine" class="card">📋<br>My Borrowed Games</a>
+        <a href="/search" class="card">🔍<br>Search / Filter</a>
+        <% if (user.role === 'admin') { %>
+            <a href="/games/add" class="card">➕<br>Add a Game</a>
+            <a href="/admin/users" class="card">👤<br>Manage Users</a>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Manage Users</title></head>
+<body>
+    <h1>Manage Users</h1>
+    <table border="1">
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        <% users.forEach(u => { %>
+        <tr>
+            <td><%= u.username %></td>
+            <td><%= u.role %></td>
+            <td><a href="/admin/users/edit/<%= u.user_id %>">Edit</a></td>
+        </tr>
+        <% }) %>
+    </table>
+</body>
+</html>

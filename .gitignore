@@ -1,0 +1,17 @@
+# Environment variables (DB credentials, session secret)
+.env
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log
+*.log
+
+# Package.json
+package.json
+package-lock.json

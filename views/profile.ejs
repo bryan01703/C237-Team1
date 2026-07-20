@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile — GameNight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="brand">
+            <span class="brand-mark">⚄</span>
+            <span class="brand-name">GameNight</span>
+        </div>
+        <nav class="header-nav">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Log out</a>
+        </nav>
+    </header>
+
+    <section class="form-section">
+        <div class="index-card form-card">
+            <span class="card-hole"></span>
+            <span class="card-no">ACCOUNT</span>
+            <h1>My Profile</h1>
+
+            <% if (typeof error !== 'undefined' && error.length > 0) { %>
+                <p class="flash flash-error"><%= error[0] %></p>
+            <% } %>
+            <% if (typeof success !== 'undefined' && success.length > 0) { %>
+                <p class="flash flash-success"><%= success[0] %></p>
+            <% } %>
+
+            <p class="role-stamp role-<%= profileUser.role %>"><%= profileUser.role %></p>
+
+            <form action="/profile" method="POST">
+                <label>Username</label>
+                <input type="text" name="username" value="<%= profileUser.username %>" required>
+
+                <label>New Password <span class="hint">(leave blank to keep current)</span></label>
+                <input type="password" name="password" placeholder="••••••••">
+
+                <button type="submit" class="stamp-button">Save Changes</button>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

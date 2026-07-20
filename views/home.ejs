@@ -1,37 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GameNight</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>GameNight — Community Board Game Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header>
-        <h1>GameNight</h1>
-        <nav>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
+    <header class="site-header">
+        <div class="brand">
+            <span class="brand-mark">⚄</span>
+            <span class="brand-name">GameNight</span>
+        </div>
+        <nav class="header-nav">
+            <a href="/login">Log in</a>
+            <a href="/register" class="nav-cta">Register</a>
         </nav>
     </header>
 
     <section class="hero">
-        <h2>Your community board game library</h2>
-        <p>Browse, borrow, and manage a shared collection of board games — no more wondering where Monopoly went.</p>
-        <a href="/register" class="cta-button">Get Started</a>
+        <p class="hero-eyebrow">CATALOG NO. 001 — EST. THIS SEMESTER</p>
+        <h1 class="hero-title">Every game on the shelf,<br>always accounted for.</h1>
+        <p class="hero-sub">GameNight is the shared checkout system for your club's board game
+            collection — browse what's on the shelf, reserve what's out, and never lose track of
+            who has Catan again.</p>
+        <a href="/register" class="stamp-button">Join the Library</a>
     </section>
 
-    <section class="features">
-        <div class="feature">
-            <h3>🎲 Browse the Catalog</h3>
-            <p>See what's available, filter by genre, players, or difficulty.</p>
+    <section class="catalog-grid">
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 01</span>
+            <h3>Browse the Shelf</h3>
+            <p>Filter by player count, difficulty, or genre before you commit to lugging a box home.</p>
         </div>
-        <div class="feature">
-            <h3>📋 Borrow & Track</h3>
-            <p>Request a game, keep track of what you've borrowed and when it's due.</p>
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 02</span>
+            <h3>Check Out & Return</h3>
+            <p>Every borrow is logged — due dates, condition, and history, no more guessing games.</p>
         </div>
-        <div class="feature">
-            <h3>🔔 Join the Waitlist</h3>
-            <p>Game's taken? Join the queue and get it automatically when it's returned.</p>
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 03</span>
+            <h3>Join the Waitlist</h3>
+            <p>Game's taken? Queue up — you're notified the moment it's checked back in.</p>
         </div>
     </section>
+
+    <footer class="site-footer">
+        <p>GameNight — built for the shelf, not the cloud.</p>
+    </footer>
 </body>
 </html>

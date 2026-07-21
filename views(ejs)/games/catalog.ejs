@@ -1,10 +1,10 @@
 <%- include('../partials/header') %>
 <%- include('../partials/navbar') %>
 
-<main class="container py-5">
+<main class="container py-5" aria-labelledby="catalog-title">
 
     <div class="mb-4">
-        <h1 class="fw-bold">Board Game Catalogue</h1>
+        <h1 id="catalog-title" class="fw-bold">Board Game Catalogue</h1>
 
         <p class="text-muted">
             Browse our community board game collection and check live availability.
@@ -79,12 +79,11 @@
                             <p class="card-text mb-2">
                                 <strong>Players:</strong>
 
-                                <% if (
-                                    game.min_players &&
-                                    game.max_players
-                                ) { %>
+                                <% if (game.min_players != null && game.max_players != null) { %>
 
-                                    <%= game.min_players %>–<%= game.max_players %>
+                                    <%= game.min_players === game.max_players
+                                        ? game.min_players
+                                        : game.min_players + '–' + game.max_players %>
 
                                 <% } else { %>
 
@@ -129,6 +128,7 @@
                             <a
                                 href="/games/<%= game.game_id %>"
                                 class="btn btn-primary w-100"
+                                aria-label="View details for <%= game.title %>"
                             >
                                 View Details
                             </a>

@@ -7,16 +7,7 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="brand">
-            <span class="brand-mark">⚄</span>
-            <span class="brand-name">GameNight</span>
-        </div>
-        <nav class="header-nav">
-            <a href="/login">Log in</a>
-            <a href="/register" class="nav-cta">Register</a>
-        </nav>
-    </header>
+    <%- include('partials/header') %>
 
     <section class="hero">
         <p class="hero-eyebrow">CATALOG NO. 001 — EST. THIS SEMESTER</p>
@@ -48,13 +39,6 @@
         </div>
     </section>
 
-    <footer class="site-footer">
-        <p>GameNight — built for the shelf, not the cloud.</p>
-    </footer>
-</body>
-</html>
-    <footer class="site-footer">
-        <p>GameNight — built for the shelf, not the cloud.</p>
-    </footer>
+    <%- include('partials/footer') %>
 </body>
 </html>

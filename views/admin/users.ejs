@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head><title>Manage Users</title></head>
+<head>
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
 <body>
-    <h1>Manage Users</h1>
-    <table border="1">
+    <%- include('../partials/header') %>
+
+    <section class="hero">
+    <h2>Manage Users</h2>
+    <table class="admin-table">
         <tr>
             <th>Username</th>
             <th>Role</th>
@@ -17,5 +25,8 @@
         </tr>
         <% }) %>
     </table>
+    </section>
+
+    <%- include('../partials/footer') %>
 </body>
 </html>

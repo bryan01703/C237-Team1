@@ -16,20 +16,28 @@ header nav a {
     margin-left: 16px;
     text-decoration: none;
 }
+
+header nav span { margin-left: 16px; }
+
 .hero {
     text-align: center;
     padding: 60px 20px;
     background: #f4f4f4;
 }
-.cta-button {
-    display: inline-block;
-    margin-top: 16px;
-    padding: 12px 24px;
-    background: #2c3e50;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
+
+.cta-button { 
+    display: inline-block; 
+    margin-top: 16px; 
+    padding: 12px 24px; 
+    background: #2c3e50; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 6px; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1rem; 
 }
+
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -56,6 +64,47 @@ header nav a {
 }
 .card:hover {
     background: #eee;
+}
+
+.flash-error { color: #A13D2B; 
+    background: #F3D9D2; 
+    padding: 10px 14px; 
+    border-radius: 4px; 
+    max-width: 400px; 
+    margin: 16px auto; 
+}
+
+.flash-success { 
+    color: #3D5A2C; 
+    background: #E4E9DA; 
+    padding: 10px 14px; 
+    border-radius: 4px; 
+    max-width: 400px; 
+    margin: 16px auto;
+}
+
+.admin-table { 
+    width: 100%; 
+    border-collapse: 
+    collapse; 
+    margin-top: 20px; 
+}
+
+.admin-table th, .admin-table td { 
+    border: 1px solid #ddd; 
+    padding: 10px 14px; 
+    text-align: left; 
+}
+
+.admin-table th { background: #2c3e50; 
+    color: white; 
+}
+
+footer { 
+    text-align: center; 
+    padding: 20px; 
+    color: #888; 
+    font-size: 0.85rem; 
 }
 
 :root {

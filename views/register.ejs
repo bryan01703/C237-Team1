@@ -5,28 +5,29 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Register</h1>
+    <%- include('partials/header') %>
+
+    <section class="hero">
+    <h2>Register</h2>
+
 
     <% if (error && error.length > 0) { %>
-        <p style="color: red;"><%= error[0] %></p>
+        <p class="flash-error"><%= error[0] %></p>
     <% } %>
 
     <form action="/register" method="POST">
-        <label>Username:</label><br>
-        <input type="text" name="username" required><br><br>
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
 
-        <label>Role (for testing):</label><br>
-        <select name="role">
-            <option value="member">Member</option>
-            <option value="admin">Admin</option>
-        </select><br><br>
-
-        <button type="submit">Register</button>
+        <button type="submit" class="cta-button">Register</button>
     </form>
 
     <p>Already have an account? <a href="/login">Login here</a></p>
+    </section>
+
+    <%- include('partials/footer') %>
 </body>
 </html>

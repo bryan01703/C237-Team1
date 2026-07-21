@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS gamenight;
-USE gamenight;
+CREATE DATABASE IF NOT EXISTS team1_gamenight;
+USE team1_gamenight;
 
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,

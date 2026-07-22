@@ -10,7 +10,7 @@ const app = express();
 
 // View engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views(ejs)'));
+app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -36,23 +36,16 @@ app.use((req, res, next) => {
 });
 
 // Routes 
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/authroutes');
 app.use('/', authRoutes);
 
 const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');
 const searchroutes = require('./routes/searchroutes');
 
-<<<<<<< HEAD
-
 app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/search', searchroutes);
-=======
-app.use('/games', gameRoutes);
-app.use('/borrow', borrowRoutes);
-app.use('/search', searchRoutes);
->>>>>>> origin
 
 // homepage with data analytics
 app.get('/', async (req, res) => {

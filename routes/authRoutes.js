@@ -1,4 +1,4 @@
-const { isAdmin, isLoggedIn } = require('../middleware/authMiddleware');
+const { isAdmin, isLoggedIn } = require('../middleware/authmiddleware');
 const ROLES = require('../config/roles');
 const express = require('express');
 const router = express.Router();

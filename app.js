@@ -2,12 +2,15 @@ const express = require('express');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
+const path = require('path');
+const db = require('./config/db');
 require('dotenv').config();
 
 const app = express();
 
 // View engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views(ejs)'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -40,10 +43,58 @@ const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');
 const searchroutes = require('./routes/searchroutes');
 
+<<<<<<< HEAD
 
 app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/search', searchroutes);
+=======
+app.use('/games', gameRoutes);
+app.use('/borrow', borrowRoutes);
+app.use('/search', searchRoutes);
+>>>>>>> origin
+
+// homepage with data analytics
+app.get('/', async (req, res) => {
+    try {
+        // run all queries in parallel to improve performance
+        const [
+            [gamesResult],
+            [usersResult],
+            [borrowsResult],
+            [popularResult]
+        ] = await Promise.all([
+            db.query('SELECT COUNT(*) AS count FROM games'),
+            db.query("SELECT COUNT(*) AS count FROM users WHERE role = 'member'"),
+            db.query('SELECT COUNT(*) AS count FROM borrow_records'),
+            db.query(`
+                SELECT g.title, COUNT(br.game_id) AS borrow_count 
+                FROM borrow_records br 
+                JOIN games g ON br.game_id = g.game_id 
+                GROUP BY br.game_id 
+                ORDER BY borrow_count DESC 
+                LIMIT 1
+            `)
+        ]);
+
+        // extract most popular game title or set to 'No borrows yet' if no records exist
+        const topGame = popularResult.length > 0 ? popularResult[0].title : 'No borrows yet';
+
+        const stats = {
+            totalGames: gamesResult[0].count,
+            totalMembers: usersResult[0].count,
+            totalBorrows: borrowsResult[0].count,
+            popularGame: topGame
+        };
+
+        res.render('index', { stats });
+    } catch (error) { // handle errors
+        console.error('Error loading dashboard analytics:', error);
+        res.render('index', { 
+            stats: { totalGames: 0, totalMembers: 0, totalBorrows: 0, popularGame: 'N/A' } 
+        });
+    }
+});
 
 // 404 handler
 app.use((req, res) => {

@@ -1,14 +1,21 @@
 <%- include('../partials/header') %>
 <%- include('../partials/navbar') %>
 
-<main class="container py-5">
+<main class="container py-5" aria-labelledby="catalog-title">
 
-    <div class="mb-4">
-        <h1 class="fw-bold">Board Game Catalogue</h1>
-
-        <p class="text-muted">
-            Browse our community board game collection and check live availability.
-        </p>
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h1 id="catalog-title" class="fw-bold">Board Game Catalogue</h1>
+            <p class="text-muted mb-0">
+                Browse our community board game collection and check live availability.
+            </p>
+        </div>
+        <!-- Only show the Add button if the user is logged in AND is an admin -->
+        <% if (user && user.role === 'admin') { %>
+            <div>
+                <a href="/games/add" class="btn btn-success px-4 fw-bold">+ Add New Game</a>
+            </div>
+        <% } %>
     </div>
 
     <% if (!games || games.length === 0) { %>
@@ -79,12 +86,11 @@
                             <p class="card-text mb-2">
                                 <strong>Players:</strong>
 
-                                <% if (
-                                    game.min_players &&
-                                    game.max_players
-                                ) { %>
+                                <% if (game.min_players != null && game.max_players != null) { %>
 
-                                    <%= game.min_players %>–<%= game.max_players %>
+                                    <%= game.min_players === game.max_players
+                                        ? game.min_players
+                                        : game.min_players + '–' + game.max_players %>
 
                                 <% } else { %>
 
@@ -125,14 +131,23 @@
                         </div>
 
                         <div class="card-footer bg-white border-0 pb-3">
-
                             <a
                                 href="/games/<%= game.game_id %>"
-                                class="btn btn-primary w-100"
+                                class="btn btn-primary w-100 mb-2"
+                                aria-label="View details for <%= game.title %>"
                             >
                                 View Details
                             </a>
 
+                            <!-- Only show the Edit button on the card if the user is an admin -->
+                            <% if (user && user.role === 'admin') { %>
+                                <a 
+                                    href="/games/edit/<%= game.game_id %>" 
+                                    class="btn btn-warning w-100 fw-bold"
+                                >
+                                    Edit Game
+                                </a>
+                            <% } %>
                         </div>
 
                     </div>

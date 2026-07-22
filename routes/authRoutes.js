@@ -47,11 +47,16 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
+    console.log("Username entered:", username);
+    console.log("Password entered:", password);
+
     try {
         const [rows] = await db.query(
             'SELECT * FROM users WHERE username = ? AND password = ?',
             [username, password]
         );
+
+        console.log("Database result:", rows);
 
         if (rows.length === 0) {
             req.flash('error', 'Invalid username or password');
@@ -68,7 +73,7 @@ router.post('/login', async (req, res) => {
         res.redirect('/games');
     } catch (err) {
         console.error(err);
-        req.flash('error', 'oops! Something went wrong, please try again');
+        req.flash('error', 'Oops! Something went wrong.');
         res.redirect('/login');
     }
 });
@@ -107,7 +112,7 @@ router.get('/admin/users/edit/:id', isAdmin, async (req, res) => {
     }
 });
 
-// updaste user details
+// update user details
 router.post('/admin/users/edit/:id', isAdmin, async (req, res) => {
     const { username, password, role } = req.body;
     try {

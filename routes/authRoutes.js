@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
         };
 
         req.flash('success', `Welcome back, ${rows[0].username}!`);
-        res.redirect('/games');
+        res.redirect('/dashboard');
     } catch (err) {
         console.error(err);
         req.flash('error', 'oops! Something went wrong, please try again');

@@ -1,0 +1,78 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0 py-2">Add New Board Game</h2>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <% if (error && error.length > 0) { %>
+                        <div class="alert alert-danger"><%= error[0] %></div>
+                    <% } %>
+                    <% if (success && success.length > 0) { %>
+                        <div class="alert alert-success"><%= success[0] %></div>
+                    <% } %>
+
+                    <form action="/games/add" method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-bold">Game Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="genre" class="form-label fw-bold">Genre</label>
+                                <input type="text" class="form-control" id="genre" name="genre" placeholder="e.g., Strategy, Party">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="difficulty" class="form-label fw-bold">Difficulty</label>
+                                <select class="form-select" id="difficulty" name="difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="min_players" class="form-label fw-bold">Min Players</label>
+                                <input type="number" class="form-control" id="min_players" name="min_players" min="1">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="max_players" class="form-label fw-bold">Max Players</label>
+                                <input type="number" class="form-control" id="max_players" name="max_players" min="1">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="game_condition" class="form-label fw-bold">Condition</label>
+                            <input type="text" class="form-control" id="game_condition" name="game_condition" value="good" placeholder="e.g., good, missing one token">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label fw-bold">Image URL</label>
+                            <input type="text" class="form-control" id="image_url" name="image_url" placeholder="http://example.com/image.jpg or filename.png">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-bold">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/games" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">Add Game</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('../partials/footer') %>

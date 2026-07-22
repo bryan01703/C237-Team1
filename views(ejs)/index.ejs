@@ -1,0 +1,80 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container py-5">
+    <!-- hero banner section -->
+    <div class="row align-items-center mb-5 pb-4 border-bottom">
+        <div class="col-lg-7">
+            <h1 class="display-4 fw-bold text-primary mb-3">Welcome to GameNight!</h1>
+            <p class="lead text-muted mb-4">
+                Your ultimate community board game library. Whether you are looking for a quick party game or an epic strategy campaign, we have something for your table.
+            </p>
+            <a href="/games" class="btn btn-primary btn-lg px-4 me-2">Browse Catalog</a>
+            
+            <!-- if the user is not logged in, show the "Join the Club" button -->
+            <% if (!user) { %>
+                <a href="/register" class="btn btn-outline-secondary btn-lg px-4">Join the Club</a>
+            <% } %>
+        </div>
+        <!-- ai generated dice image and code for the hero banner -->
+        <div class="col-lg-5 d-none d-lg-block text-center">
+            <h1 style="font-size: 8rem; text-shadow: 2px 4px 10px rgba(0,0,0,0.1);">🎲</h1>
+        </div>
+    </div>
+
+    <!-- analytics section -->
+    <div class="text-center mb-4">
+        <h2 class="h3 fw-bold">Community Stats</h2>
+        <p class="text-muted">Look at what our members are playing.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center text-center">
+        <!-- stat 1: total games -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="display-5 mb-2">📦</div>
+                    <h3 class="display-5 fw-bold mb-0"><%= stats.totalGames %></h3>
+                    <p class="fs-6 mb-0 text-white-50 mt-1 text-uppercase fw-bold">Games in Library</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- stat 2: total members -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 bg-success text-white">
+                <div class="card-body p-4">
+                    <div class="display-5 mb-2">👥</div>
+                    <h3 class="display-5 fw-bold mb-0"><%= stats.totalMembers %></h3>
+                    <p class="fs-6 mb-0 text-white-50 mt-1 text-uppercase fw-bold">Active Members</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- stat 3: total borrows -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 bg-warning text-dark">
+                <div class="card-body p-4">
+                    <div class="display-5 mb-2">🔄</div>
+                    <h3 class="display-5 fw-bold mb-0"><%= stats.totalBorrows %></h3>
+                    <p class="fs-6 mb-0 mt-1 text-uppercase fw-bold" style="color: rgba(0,0,0,0.5);">All-Time Borrows</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- stat 4: most popular game -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 bg-info text-dark">
+                <div class="card-body p-4 d-flex flex-column justify-content-center">
+                    <div class="display-5 mb-2">🏆</div>
+                    <h3 class="h4 fw-bold mb-0 text-truncate" title="<%= stats.popularGame %>">
+                        <%= stats.popularGame %>
+                    </h3>
+                    <p class="fs-6 mb-0 mt-1 text-uppercase fw-bold" style="color: rgba(0,0,0,0.5);">Most Popular</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

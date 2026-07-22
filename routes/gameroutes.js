@@ -1,6 +1,80 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const { isAdmin } = require('../middleware/authMiddleware'); // import isAdmin middleware for add and edit routes
+
+// show add game Form
+router.get('/add', isAdmin, (req, res) => {
+    res.render('games/addgame');
+});
+
+// process add game Form
+router.post('/add', isAdmin, async (req, res) => {
+    const { 
+        title, genre, min_players, max_players, 
+        difficulty, game_condition, description, image_url 
+    } = req.body;
+
+    try {
+        await db.query(
+            `INSERT INTO games 
+            (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [title, genre, min_players, max_players, difficulty, game_condition, description, image_url]
+        );
+        req.flash('success', 'New game added to the catalog successfully!');
+        res.redirect('/games');
+    } catch (error) {
+        console.error('Error adding game:', error.message);
+        req.flash('error', 'Failed to add game. Please check your inputs.');
+        res.redirect('/games/add');
+    }
+});
+
+// show edit game form
+router.get('/edit/:id', isAdmin, async (req, res) => {
+    const gameId = req.params.id;
+
+    try {
+        const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [gameId]);
+        
+        if (games.length === 0) {
+            req.flash('error', 'Game not found.');
+            return res.redirect('/games');
+        }
+
+        res.render('games/editgame', { game: games[0] });
+    } catch (error) {
+        console.error('Error fetching game for edit:', error.message);
+        req.flash('error', 'Could not load the edit form.');
+        res.redirect('/games');
+    }
+});
+
+// process edit game form
+router.post('/edit/:id', isAdmin, async (req, res) => {
+    const gameId = req.params.id;
+    const { 
+        title, genre, min_players, max_players, 
+        difficulty, game_condition, description, image_url 
+    } = req.body;
+
+    try {
+        await db.query(
+            `UPDATE games 
+            SET title = ?, genre = ?, min_players = ?, max_players = ?, 
+                difficulty = ?, game_condition = ?, description = ?, image_url = ? 
+            WHERE game_id = ?`,
+            [title, genre, min_players, max_players, difficulty, game_condition, description, image_url, gameId]
+        );
+        req.flash('success', 'Game details updated successfully!');
+        res.redirect(`/games/${gameId}`); // redirect to detail page after successful update
+    } catch (error) {
+        console.error('Error updating game:', error.message);
+        req.flash('error', 'Failed to update game details.');
+        res.redirect(`/games/edit/${gameId}`);
+    }
+});
 
 // B's fixed add/edit routes should stay above C's dynamic /:id route.
 const availabilitySql = `CASE WHEN EXISTS (

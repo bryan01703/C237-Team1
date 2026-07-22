@@ -1,3 +1,9 @@
+const db = mysql.createConnection({
+    host: 'c237-adib-mysql.mysql.database.azure.com',
+    user: 'c237_026',
+    password: 'c237026@2026!',
+    database: 'c237_026_team1_gamenigh'
+});
 const express = require('express');
 const session = require('express-session');
 const methodOverride = require('method-override');
@@ -5,8 +11,12 @@ const flash = require('connect-flash');
 const path = require('path');
 const db = require('./config/db');
 require('dotenv').config();
-
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 
 // View engine
 app.set('view engine', 'ejs');

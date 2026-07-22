@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+        <!-- Brand Logo -->
+        <a class="navbar-brand" href="/games">🎲 GameNight</a>
+        
+        <!-- Mobile Toggle Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/games">Catalog</a>
+                </li>
+                
+                <% if (user) { %>
+                    <!-- Links for logged-in users -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/borrow/my">My Borrowed Games</a>
+                    </li>
+                    
+                    <% if (user.role === 'admin') { %>
+                        <!-- Admin-only links -->
+                        <li class="nav-item">
+                            <a class="nav-link text-warning fw-bold" href="/admin/users">Manage Users</a>
+                        </li>
+                    <% } %>
+                <% } %>
+            </ul>
+
+            <!-- Right side / Auth links -->
+            <ul class="navbar-nav ms-auto">
+                <% if (user) { %>
+                    <li class="nav-item d-flex align-items-center me-3">
+                        <span class="text-muted fw-medium">Hello, <%= user.username %>!</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-danger btn-sm mt-1" href="/logout">Logout</a>
+                    </li>
+                <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-sm mt-1 ms-2" href="/register">Register</a>
+                    </li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>

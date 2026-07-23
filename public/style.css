@@ -11,7 +11,7 @@ body {
     display: flex;
     flex-direction: column;
 
-    background: #f4f7f8;
+    background: #f7f2e7;
     color: #333;
 
     font-family: "Poppins", sans-serif;
@@ -104,8 +104,8 @@ body {
     --felt: #2E5E4E;
     --felt-dark: #23473B;
 
-    --card: #FFFFFF;
-    --card-line: #DDD6C8;
+    background:#fffaf3;
+    border:1px solid #d7c3a5;
 
     --ink: #2F2F2F;
 
@@ -128,8 +128,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 18px 40px;
-    background: white;
-    border-bottom: 1px solid var(--card-line);
+    background: #6B4F3A;;
+    border-bottom: 1px solid #8C6B4F;
     color: var(--ink);
 }
 
@@ -198,7 +198,7 @@ body {
 /* stamp button */
 .stamp-button{
     display:inline-block;
-    background:var(--felt);
+    background:#5F412D;
     color:white;
     text-decoration:none;
     padding:14px 30px;
@@ -224,8 +224,8 @@ body {
 }
 .index-card {
     position: relative;
-    background:white;
-    border:1px solid var(--card-line);
+    background: #FFFBF5;
+    border:1px solid #D7C3A5;
     border-radius:12px;
     box-shadow:0 3px 10px rgba(0,0,0,.05);
     transition:.2s;
@@ -290,6 +290,55 @@ body {
 }
 .role-admin { color: var(--stamp-red); }
 .role-member { color: var(--felt); }
+
+.profile-banner{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    margin-bottom:30px;
+}
+
+.profile-avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:#5b3a29;
+    color:#FFFDF9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+    font-weight:700;
+}
+
+.profile-info h1{
+    margin:0;
+}
+
+.profile-summary{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin:25px 0;
+}
+
+.summary-item{
+    background:#f8f6ef;
+    border:2px solid #d8d1bd;
+    border-radius:14px;
+    padding:14px;
+}
+
+.summary-item span{
+    display:block;
+    font-size:.8rem;
+    opacity:.7;
+    margin-bottom:4px;
+}
+
+.summary-item strong{
+    font-size:1.05rem;
+}
 
 /* forms */
 .form-section { max-width: 480px; margin: 60px auto; padding: 0 24px; }

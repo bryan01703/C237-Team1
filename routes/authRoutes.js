@@ -98,20 +98,52 @@ router.get('/logout', (req, res) => {
 
 router.get('/profile', isLoggedIn, async (req, res) => {
     try {
+        // Get user info
         const [rows] = await db.query(
             'SELECT user_id, username, role FROM users WHERE user_id = ?',
             [req.session.user.id]
         );
-         if (rows.length === 0) {
-             req.flash('error', 'Account not found');
-             return res.redirect('/dashboard');
-        }         res.render('profile', { profileUser: rows[0] });
+
+        if (rows.length === 0) {
+            req.flash('error', 'Account not found');
+            return res.redirect('/dashboard');
+        }
+
+        // Get borrow history
+        const [borrowHistory] = await db.query(`
+            SELECT
+                g.title,
+                br.borrow_date,
+                br.due_date,
+                br.return_date,
+                br.status
+            FROM borrow_records br
+            JOIN games g
+                ON br.game_id = g.game_id
+            WHERE br.user_id = ?
+            ORDER BY br.borrow_date DESC
+        `, [req.session.user.id]);
+
+        // Statistics
+        const stats = {
+            total: borrowHistory.length,
+            returned: borrowHistory.filter(r => r.status.toLowerCase() === 'returned').length,
+            current: borrowHistory.filter(r => r.status.toLowerCase() === 'borrowed').length,
+            overdue: borrowHistory.filter(r => r.status.toLowerCase() === 'overdue').length
+        };
+        
+        res.render('profile', {
+            profileUser: rows[0],
+            borrowHistory,
+            stats
+        });
+
     } catch (err) {
-         console.error(err);
-         req.flash('error', 'Could not load your profile');
-         res.redirect('/dashboard');
+        console.error(err);
+        req.flash('error', 'Could not load your profile');
+        res.redirect('/dashboard');
     }
- });
+});
 
  //profile 
 router.post('/profile', isLoggedIn, async (req, res) => {

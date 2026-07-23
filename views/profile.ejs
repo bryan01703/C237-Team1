@@ -22,7 +22,18 @@
         <div class="index-card form-card">
             <span class="card-hole"></span>
             <span class="card-no">ACCOUNT</span>
-            <h1>My Profile</h1>
+        <div class="profile-banner">
+        <div class="profile-avatar">
+            <%= profileUser.username.charAt(0).toUpperCase() %>
+        </div>
+
+        <div class="profile-info">
+            <h1><%= profileUser.username %></h1>
+            <p class="role-stamp role-<%= profileUser.role %>">
+                <%= profileUser.role %>
+            </p>
+        </div>
+    </div>
 
             <% if (typeof error !== 'undefined' && error.length > 0) { %>
                 <p class="flash flash-error"><%= error[0] %></p>
@@ -31,7 +42,36 @@
                 <p class="flash flash-success"><%= success[0] %></p>
             <% } %>
 
-            <p class="role-stamp role-<%= profileUser.role %>"><%= profileUser.role %></p>
+            <div class="profile-summary">
+            <div class="summary-item">
+                <span>Username</span>
+                <strong><%= profileUser.username %></strong>
+            </div>
+            </div>
+              
+            <div class="profile-stats">
+
+                <div class="stat-card">
+                    <span>Total Borrowed</span>
+                    <strong><%= stats.total %></strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Currently Borrowed</span>
+                    <strong><%= stats.current %></strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Returned</span>
+                    <strong><%= stats.returned %></strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Overdue</span>
+                    <strong><%= stats.overdue %></strong>
+                </div>
+
+            </div>
 
             <form action="/profile" method="POST">
                 <label>Username</label>
@@ -42,6 +82,39 @@
 
                 <button type="submit" class="stamp-button">Save Changes</button>
             </form>
+            <hr class="profile-divider">
+            <h2>Borrow History</h2>
+            <% if (borrowHistory.length === 0) { %>
+                <p>You haven't borrowed any games yet.</p>
+            <% } else { %>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrowed</th>
+                        <th>Due</th>
+                        <th>Returned</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% borrowHistory.forEach(record => { %>
+                    <tr>
+                        <td><%= record.title %></td>
+                        <td><%= record.borrow_date %></td>
+                        <td><%= record.due_date %></td>
+                        <td><%= record.return_date || "-" %></td>
+                        <td>
+                            <span class="status-pill status-<%= record.status.toLowerCase() %>">
+                                <%= record.status %>
+                            </span>
+                        </td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+
         </div>
     </section>
 </body>

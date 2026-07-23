@@ -20,6 +20,7 @@ CREATE TABLE games (
     description TEXT,
     image_url VARCHAR(255),
     status ENUM('available', 'borrowed') NOT NULL DEFAULT 'available',
+    archived BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

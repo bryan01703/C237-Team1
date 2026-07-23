@@ -45,8 +45,8 @@ app.use((req, res, next) => {
 });
 
 // Routes 
-const authRoutes = require('./routes/authroutes');
-app.use('/', authRoutes);
+const authroutes = require('./routes/authroutes');
+app.use('/', authroutes);
 
 const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');

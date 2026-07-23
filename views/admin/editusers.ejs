@@ -25,6 +25,62 @@
 
         <button type="submit" class="cta-button">Save Changes</button>
     </form>
+    <hr>
+
+    <h2>Borrowing History</h2>
+
+    <% if (!borrowHistory || borrowHistory.length === 0) { %>
+        <p>This user has no borrowing history.</p>
+    <% } else { %>
+        <% borrowHistory.forEach(record => { %>
+            <form
+                action="/admin/users/<%= user.user_id %>/borrow/<%= record.record_id %>/update"
+                method="POST"
+                class="index-card form-card"
+            >
+                <h3><%= record.title %></h3>
+
+                <label>Borrow Date</label>
+                <input
+                    type="date"
+                    name="borrow_date"
+                    value="<%= record.borrow_date.toISOString().slice(0, 10) %>"
+                    required
+                >
+
+                <label>Due Date</label>
+                <input
+                    type="date"
+                    name="due_date"
+                    value="<%= record.due_date.toISOString().slice(0, 10) %>"
+                    required
+                >
+
+                <label>Return Date</label>
+                <input
+                    type="date"
+                    name="return_date"
+                    value="<%= record.return_date
+                        ? record.return_date.toISOString().slice(0, 10)
+                        : '' %>"
+                >
+
+                <label>Status</label>
+                <select name="status">
+                    <option value="active" <%= record.status === 'active' ? 'selected' : '' %>>
+                        Active
+                    </option>
+                    <option value="returned" <%= record.status === 'returned' ? 'selected' : '' %>>
+                        Returned
+                    </option>
+                </select>
+
+                <button type="submit" class="stamp-button">
+                    Update Borrowing Record
+                </button>
+            </form>
+        <% }) %>
+    <% } %>
     </section>
     
     <%- include('../partials/footer') %>

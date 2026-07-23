@@ -102,16 +102,42 @@ router.get('/profile', isLoggedIn, async (req, res) => {
             'SELECT user_id, username, role FROM users WHERE user_id = ?',
             [req.session.user.id]
         );
-         if (rows.length === 0) {
-             req.flash('error', 'Account not found');
-             return res.redirect('/dashboard');
-        }         res.render('profile', { profileUser: rows[0] });
+
+        if (rows.length === 0) {
+            req.flash('error', 'Account not found');
+            return res.redirect('/dashboard');
+        }
+
+        const [borrowHistory] = await db.query(
+            `SELECT
+                br.record_id,
+                br.borrow_date,
+                br.due_date,
+                br.return_date,
+                br.status,
+                g.title,
+                CASE
+                    WHEN br.status = 'returned' THEN 'returned'
+                    WHEN br.due_date < CURDATE() THEN 'overdue'
+                    ELSE 'active'
+                END AS display_status
+             FROM borrow_records br
+             JOIN games g ON br.game_id = g.game_id
+             WHERE br.user_id = ?
+             ORDER BY br.borrow_date DESC`,
+            [req.session.user.id]
+        );
+
+        res.render('profile', {
+            profileUser: rows[0],
+            borrowHistory
+        });
     } catch (err) {
-         console.error(err);
-         req.flash('error', 'Could not load your profile');
-         res.redirect('/dashboard');
+        console.error(err);
+        req.flash('error', 'Could not load your profile');
+        res.redirect('/dashboard');
     }
- });
+});
 
  //profile 
 router.post('/profile', isLoggedIn, async (req, res) => {
@@ -169,17 +195,82 @@ router.get('/admin/users', isAdmin, async (req, res) => {
 // show edit form for specific user
 router.get('/admin/users/edit/:id', isAdmin, async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM users WHERE user_id = ?', [req.params.id]);
+        const [rows] = await db.query(
+            'SELECT * FROM users WHERE user_id = ?',
+            [req.params.id]
+        );
+
         if (rows.length === 0) {
             req.flash('error', 'User not found');
             return res.redirect('/admin/users');
         }
-        res.render('admin/editusers', { user: rows[0] });
+
+        const [borrowHistory] = await db.query(
+            `SELECT
+                br.record_id,
+                br.game_id,
+                br.borrow_date,
+                br.due_date,
+                br.return_date,
+                br.status,
+                g.title
+             FROM borrow_records br
+             JOIN games g ON br.game_id = g.game_id
+             WHERE br.user_id = ?
+             ORDER BY br.borrow_date DESC`,
+            [req.params.id]
+        );
+
+        res.render('admin/editusers', {
+            user: rows[0],
+            borrowHistory
+        });
     } catch (err) {
         console.error(err);
+        req.flash('error', 'Could not load user details');
         res.redirect('/admin/users');
     }
 });
+
+router.post(
+    '/admin/users/:userId/borrow/:recordId/update',
+    isAdmin,
+    async (req, res) => {
+        const {
+            borrow_date,
+            due_date,
+            return_date,
+            status
+        } = req.body;
+
+        try {
+            await db.query(
+                `UPDATE borrow_records
+                 SET borrow_date = ?,
+                     due_date = ?,
+                     return_date = ?,
+                     status = ?
+                 WHERE record_id = ?
+                   AND user_id = ?`,
+                [
+                    borrow_date,
+                    due_date,
+                    return_date || null,
+                    status,
+                    req.params.recordId,
+                    req.params.userId
+                ]
+            );
+
+            req.flash('success', 'Borrowing record updated successfully');
+            res.redirect(`/admin/users/edit/${req.params.userId}`);
+        } catch (err) {
+            console.error(err);
+            req.flash('error', 'Could not update borrowing record');
+            res.redirect(`/admin/users/edit/${req.params.userId}`);
+        }
+    }
+);
 
 // updaste user details, checks if there is admin
 router.post('/admin/users/edit/:id', isAdmin, async (req, res) => {

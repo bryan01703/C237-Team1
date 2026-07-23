@@ -42,6 +42,67 @@
 
                 <button type="submit" class="stamp-button">Save Changes</button>
             </form>
+            <hr>
+
+            <h2>Currently Borrowed</h2>
+
+            <%
+                const currentBorrows = (borrowHistory || []).filter(
+                    record => record.display_status !== 'returned'
+                );
+            %>
+
+            <% if (currentBorrows.length === 0) { %>
+                <p>You currently have no borrowed games.</p>
+            <% } else { %>
+                <table class="admin-table">
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrowed</th>
+                        <th>Due</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <% currentBorrows.forEach(record => { %>
+                        <tr>
+                            <td><%= record.title %></td>
+                            <td><%= new Date(record.borrow_date).toLocaleDateString() %></td>
+                            <td><%= new Date(record.due_date).toLocaleDateString() %></td>
+                            <td><%= record.display_status %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            <% } %>
+
+            <hr>
+
+            <h2>Borrowing History</h2>
+
+            <% if (!borrowHistory || borrowHistory.length === 0) { %>
+                <p>You have no borrowing history.</p>
+            <% } else { %>
+                <table class="admin-table">
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrowed</th>
+                        <th>Returned</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <% borrowHistory.forEach(record => { %>
+                        <tr>
+                            <td><%= record.title %></td>
+                            <td><%= new Date(record.borrow_date).toLocaleDateString() %></td>
+                            <td>
+                                <%= record.return_date
+                                    ? new Date(record.return_date).toLocaleDateString()
+                                    : 'Not returned' %>
+                            </td>
+                            <td><%= record.display_status %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            <% } %>
         </div>
     </section>
 </body>

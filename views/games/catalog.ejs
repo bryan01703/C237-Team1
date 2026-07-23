@@ -1,8 +1,6 @@
 <%- include('../partials/header') %>
 
-
 <main class="container py-5" aria-labelledby="catalog-title">
-
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <div>
             <h1 id="catalog-title" class="fw-bold">Board Game Catalogue</h1>
@@ -19,25 +17,17 @@
     </div>
 
     <% if (!games || games.length === 0) { %>
-
         <div class="alert alert-info">
             No games were found in the catalogue.
         </div>
-
     <% } else { %>
-
         <div class="row g-4">
-
             <% games.forEach(game => { %>
-
                 <div class="col-sm-6 col-lg-4">
-
                     <div class="card h-100 shadow-sm">
-
                         <% if (game.image_url) { %>
-
-                            <img
-                                src="<%=
+                            <img src="
+                                <%=
                                     game.image_url.startsWith('http')
                                         ? game.image_url
                                         : '/images/' + game.image_url
@@ -45,36 +35,30 @@
                                 class="card-img-top game-card-image"
                                 alt="<%= game.title %>"
                             >
-
                         <% } else { %>
-
                             <div class="game-image-placeholder">
                                 No image available
                             </div>
-
                         <% } %>
 
                         <div class="card-body">
-
-                            <div
-                                class="d-flex justify-content-between align-items-start gap-2 mb-3"
-                            >
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
                                 <h2 class="card-title h4 mb-0">
                                     <%= game.title %>
                                 </h2>
 
-                                <% if (game.availability === 'available') { %>
-
+                                <% if (game.archived) { %>
+                                    <span class="badge bg-secondary">
+                                        Archived
+                                    </span>
+                                <% } else if (game.availability === 'available') { %>
                                     <span class="badge bg-success">
                                         Available
                                     </span>
-
                                 <% } else { %>
-
                                     <span class="badge bg-danger">
                                         Unavailable
                                     </span>
-
                                 <% } %>
                             </div>
 
@@ -85,17 +69,12 @@
 
                             <p class="card-text mb-2">
                                 <strong>Players:</strong>
-
                                 <% if (game.min_players != null && game.max_players != null) { %>
-
                                     <%= game.min_players === game.max_players
                                         ? game.min_players
                                         : game.min_players + '–' + game.max_players %>
-
                                 <% } else { %>
-
                                     Not specified
-
                                 <% } %>
                             </p>
 
@@ -115,19 +94,14 @@
 
                             <p class="card-text text-muted">
                                 <% if (game.description) { %>
-
                                     <%= game.description.length > 100
                                         ? game.description.substring(0, 100) + '...'
                                         : game.description
                                     %>
-
                                 <% } else { %>
-
                                     No description available.
-
                                 <% } %>
                             </p>
-
                         </div>
 
                         <div class="card-footer bg-white border-0 pb-3">
@@ -149,17 +123,11 @@
                                 </a>
                             <% } %>
                         </div>
-
                     </div>
-
                 </div>
-
             <% }) %>
-
         </div>
-
     <% } %>
-
 </main>
 
 <%- include('../partials/footer') %>

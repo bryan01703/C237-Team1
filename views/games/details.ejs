@@ -2,22 +2,20 @@
 
 
 <main class="container py-5">
+    <a href="/games" class="btn btn-outline-secondary mb-4">&larr; Back to Catalogue</a>
 
-    <a
-        href="/games"
-        class="btn btn-outline-secondary mb-4"
-    >
-        &larr; Back to Catalogue
-    </a>
+    <!-- flash messages -->
+    <% if (error && error.length > 0) { %>
+        <div class="alert alert-danger"><%= error[0] %></div>
+    <% } %>
+    <% if (success && success.length > 0) { %>
+        <div class="alert alert-success"><%= success[0] %></div>
+    <% } %>
 
     <div class="card shadow-sm">
-
         <div class="row g-0">
-
             <div class="col-md-5">
-
                 <% if (game.image_url) { %>
-
                     <img
                         src="<%=
                             game.image_url.startsWith('http')
@@ -27,40 +25,26 @@
                         class="img-fluid game-detail-image"
                         alt="<%= game.title %>"
                     >
-
                 <% } else { %>
-
                     <div class="game-detail-placeholder">
                         No image available
                     </div>
-
                 <% } %>
-
             </div>
-
             <div class="col-md-7">
-
                 <div class="card-body p-4">
-
-                    <div
-                        class="d-flex justify-content-between align-items-start gap-3 mb-4"
-                    >
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
                         <h1 class="fw-bold mb-0">
                             <%= game.title %>
                         </h1>
-
                         <% if (game.availability === 'available') { %>
-
                             <span class="badge bg-success fs-6">
                                 Available
                             </span>
-
                         <% } else { %>
-
                             <span class="badge bg-danger fs-6">
                                 Unavailable
                             </span>
-
                         <% } %>
                     </div>
 
@@ -71,23 +55,17 @@
 
                     <p>
                         <strong>Players:</strong>
-
                         <% if (game.min_players != null && game.max_players != null) { %>
-
                             <%= game.min_players === game.max_players
                                 ? game.min_players
                                 : game.min_players + '–' + game.max_players %>
-
                         <% } else { %>
-
                             Not specified
-
                         <% } %>
                     </p>
 
                     <p>
                         <strong>Difficulty:</strong>
-
                         <span class="text-capitalize">
                             <%= game.difficulty || 'Not specified' %>
                         </span>
@@ -95,7 +73,6 @@
 
                     <p>
                         <strong>Condition:</strong>
-
                         <span class="text-capitalize">
                             <%= game.game_condition || 'Not specified' %>
                         </span>
@@ -116,7 +93,6 @@
 
                         <div class="alert alert-warning">
                             Expected return date:
-
                             <strong>
                                 <%= new Intl.DateTimeFormat('en-SG', {
                                     day: 'numeric', month: 'short', year: 'numeric',
@@ -128,71 +104,53 @@
                     <% } %>
 
                     <div class="mt-4">
-
                         <% if (!user) { %>
-
-                            <a
-                                href="/login"
-                                class="btn btn-primary"
-                            >
+                            <a href="/login" class="btn btn-primary">
                                 Login to Borrow
                             </a>
-
                         <% } else if (
                             user.role === 'member' &&
                             game.availability === 'available'
                         ) { %>
 
-                            <form
-                                action="/borrow/<%= game.game_id %>"
-                                method="POST"
-                            >
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
+                            <form action="/borrow/<%= game.game_id %>" method="POST">
+                                <button type="submit" class="btn btn-primary">
                                     Request to Borrow
                                 </button>
                             </form>
-
                         <% } else if (
                             user.role === 'member' &&
                             game.availability === 'unavailable'
                         ) { %>
-
-                            <form
-                                action="/waitlist/<%= game.game_id %>"
-                                method="POST"
-                            >
-                                <button
-                                    type="submit"
-                                    class="btn btn-warning"
-                                >
+                            <form action="/waitlist/<%= game.game_id %>" method="POST">
+                                <button type="submit" class="btn btn-warning">
                                     Join Waitlist
                                 </button>
                             </form>
-
                         <% } else if (user.role === 'admin') { %>
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="/games/edit/<%= game.game_id %>" class="btn btn-outline-primary">Edit Game</a>
+                                
+                                <% if (game.archived) { %>
+                                    <form action="/games/unretire/<%= game.game_id %>" method="POST" class="m-0">
+                                        <button type="submit" class="btn btn-success">Unretire Game</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action="/games/retire/<%= game.game_id %>" method="POST" class="m-0">
+                                        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to retire this game? It will hide it from the public catalog.')">Retire</button>
+                                    </form>
+                                <% } %>
 
-                            <a
-                                href="/games/edit/<%= game.game_id %>"
-                                class="btn btn-outline-primary"
-                            >
-                                Edit Game
-                            </a>
-
+                                <form action="/games/delete/<%= game.game_id %>" method="POST" class="m-0">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('WARNING: Permanent Delete! Use Retire instead if this game was ever borrowed. Continue?')">Delete</button>
+                                </form>
+                            </div>
                         <% } %>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </main>
 
 <%- include('../partials/footer') %>

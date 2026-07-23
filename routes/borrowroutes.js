@@ -112,4 +112,32 @@ router.post('/return/:id', isLoggedIn, async (req, res) => {
     }
 });
 
+// join the waitlist for an unavailable game
+router.post('/waitlist/:id', isLoggedIn, async (req, res) => {
+    try {
+        // prevent adding if they are already on the waitlist
+        const [existing] = await db.query(
+            'SELECT * FROM waitlist WHERE game_id = ? AND user_id = ? AND notified = FALSE',
+            [req.params.id, req.session.user.id]
+        );
+
+        if (existing.length > 0) {
+            req.flash('error', 'You are already on the waitlist for this game.');
+            return res.redirect(`/games/${req.params.id}`);
+        }
+
+        await db.query(
+            'INSERT INTO waitlist (game_id, user_id) VALUES (?, ?)',
+            [req.params.id, req.session.user.id]
+        );
+        
+        req.flash('success', 'You have successfully joined the waitlist! We will notify you when it returns.');
+        res.redirect(`/games/${req.params.id}`);
+    } catch (error) {
+        console.error('Waitlist error:', error);
+        req.flash('error', 'Could not join the waitlist at this time.');
+        res.redirect(`/games/${req.params.id}`);
+    }
+});
+
 module.exports = router;

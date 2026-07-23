@@ -18,7 +18,7 @@
                         <div class="alert alert-success"><%= success[0] %></div>
                     <% } %>
 
-                    <form action="/games/add" method="POST">
+                    <form action="/games/add" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label fw-bold">Game Title <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title" name="title" required>
@@ -54,10 +54,10 @@
                             <label for="game_condition" class="form-label fw-bold">Condition</label>
                             <input type="text" class="form-control" id="game_condition" name="game_condition" value="good" placeholder="e.g., good, missing one token">
                         </div>
-
+                        
                         <div class="mb-3">
-                            <label for="image_url" class="form-label fw-bold">Image URL</label>
-                            <input type="text" class="form-control" id="image_url" name="image_url" placeholder="http://example.com/image.jpg or filename.png">
+                            <label for="image" class="form-label fw-bold">Upload Box Image <span class="hint">(JPEG/PNG)</span></label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png">
                         </div>
 
                         <div class="mb-4">

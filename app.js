@@ -51,10 +51,12 @@ app.use('/', authroutes);
 const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');
 const searchroutes = require('./routes/searchroutes');
+const reviewroutes = require('./routes/reviewroutes');
 
 app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/search', searchroutes);
+app.use('/reviews', reviewroutes);
 
 // homepage with data analytics
 app.get('/', async (req, res) => {

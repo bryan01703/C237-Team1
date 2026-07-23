@@ -85,7 +85,11 @@ const availabilitySql = `CASE WHEN EXISTS (
 router.get('/', async (req, res) => {
     try {
         const [games] = await db.query(`
-            SELECT g.*, ${availabilitySql} AS availability
+            SELECT g.*, ${availabilitySql} AS availability,
+                (SELECT ROUND(AVG(r.rating), 1)
+                 FROM reviews r WHERE r.game_id = g.game_id) AS average_rating,
+                (SELECT COUNT(*)
+                 FROM reviews r WHERE r.game_id = g.game_id) AS review_count
             FROM games g ORDER BY g.title ASC
         `);
         return res.render('games/catalog', { games });
@@ -108,13 +112,26 @@ router.get('/:id', async (req, res) => {
                 (SELECT br.due_date FROM borrow_records br
                  WHERE br.game_id = g.game_id AND br.status = 'active'
                  ORDER BY br.due_date ASC LIMIT 1) AS due_date
+                ,(SELECT ROUND(AVG(r.rating), 1)
+                  FROM reviews r WHERE r.game_id = g.game_id) AS average_rating
+                ,(SELECT COUNT(*)
+                  FROM reviews r WHERE r.game_id = g.game_id) AS review_count
             FROM games g WHERE g.game_id = ? LIMIT 1
         `, [gameId]);
 
         if (games.length === 0) {
             return res.status(404).send('Game not found.');
         }
-        return res.render('games/details', { game: games[0] });
+        const [reviews] = await db.query(`
+            SELECT r.review_id, r.user_id, r.rating, r.comment,
+                   r.created_at, r.updated_at, u.username
+            FROM reviews r
+            JOIN users u ON u.user_id = r.user_id
+            WHERE r.game_id = ?
+            ORDER BY r.updated_at DESC
+        `, [gameId]);
+
+        return res.render('games/details', { game: games[0], reviews });
     } catch (error) {
         console.error('Error retrieving game details:', error.message);
         return res.status(500).send('The game details could not be loaded. Please try again.');

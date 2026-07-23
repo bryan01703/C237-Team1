@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-const { isAdmin } = require('../middleware/authMiddleware'); // import isAdmin middleware for add and edit routes
+const { isAdmin } = require('../middleware/authmiddleware'); // import isAdmin middleware for add and edit routes
 
 // show add game Form
 router.get('/add', isAdmin, (req, res) => {

@@ -10,7 +10,7 @@ router.post('/:id', isLoggedIn, (req, res) => {
 });
 
 // Display the member's borrowing history.
-router.get('/my', isLoggedIn, async (req, res) => {
+router.get('/mine', isLoggedIn, async (req, res) => {
     try {
         const [borrowedGames] = await db.query(
             `SELECT br.*, g.title
@@ -21,7 +21,7 @@ router.get('/my', isLoggedIn, async (req, res) => {
             [req.session.user.id]
         );
 
-        res.render('borrow/personalborrowed', { borrowedgames });
+        res.render('borrow/personalborrowed', { borrowedGames });
     } catch (error) {
         console.error('Error loading borrowed games:', error);
         req.flash('error', 'Could not load your borrowed games.');
@@ -83,7 +83,7 @@ router.post('/request/:id', isLoggedIn, async (req, res) => {
         );
 
         req.flash('success', 'Game borrowed successfully!');
-        res.redirect('/borrow/my');
+        res.redirect('/borrow/mine');
     } catch (error) {
         console.error('Error borrowing game:', error);
         req.flash('error', 'Could not borrow this game.');
@@ -104,11 +104,11 @@ router.post('/return/:id', isLoggedIn, async (req, res) => {
         );
 
         req.flash('success', 'Game returned successfully!');
-        res.redirect('/borrow/my');
+        res.redirect('/borrow/mine');
     } catch (error) {
         console.error('Error returning game:', error);
         req.flash('error', 'Could not return this game.');
-        res.redirect('/borrow/my');
+        res.redirect('/borrow/mine');
     }
 });
 

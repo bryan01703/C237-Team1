@@ -28,7 +28,7 @@ app.use(express.static('public'));
 app.use(methodOverride('_method'));
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: 'c237-team1-session-secret',
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 2 } // 2 hour session

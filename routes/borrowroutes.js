@@ -21,7 +21,7 @@ router.get('/my', isLoggedIn, async (req, res) => {
             [req.session.user.id]
         );
 
-        res.render('borrow/personalborrowed', { borrowedGames });
+        res.render('borrow/personalborrowed', { borrowedgames });
     } catch (error) {
         console.error('Error loading borrowed games:', error);
         req.flash('error', 'Could not load your borrowed games.');

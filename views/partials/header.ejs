@@ -1,0 +1,18 @@
+<header class="site-header">
+    <div class="brand">
+        🎲 GameNight
+    </div>
+
+    <nav class="header-nav">
+        <a href="/">Home</a>
+        <a href="/games">Games</a>
+        <a href="/dashboard">Dashboard</a>
+
+        <% if (user) { %>
+            <a href="/profile">profile</a>
+            <a href="/logout">Logout</a>
+        <% } else { %>
+            <a href="/login">Login</a>
+        <% } %>
+    </nav>
+</header>

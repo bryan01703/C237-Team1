@@ -5,10 +5,333 @@
    GENERAL STYLING & TYPOGRAPHY
    ========================================= */
 body {
+    margin: 0;
     min-height: 100vh;
-    background-color: #f4f7f8; /* Softer, slightly cooler background */
-    font-family: 'Poppins', sans-serif; /* Modern, readable font */
-    color: #2c3e50;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #f4f7f8;
+    color: #333;
+
+    font-family: "Poppins", sans-serif;
+    line-height: 1.5;
+}
+
+
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f4f4f4;
+}
+
+.cta-button { 
+    display: inline-block; 
+    margin-top: 16px; 
+    padding: 12px 24px; 
+    background: #2c3e50; 
+    color: white; 
+    text-decoration: none; 
+    border-radius: 6px; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1rem; 
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 40px;
+}
+.feature {
+    text-align: center;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 32px;
+}
+.home-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background: #f9f9f9;
+}
+.home-card:hover {
+    background: #eee;
+}
+
+.flash-error { color: #A13D2B; 
+    background: #F3D9D2; 
+    padding: 10px 14px; 
+    border-radius: 4px; 
+    max-width: 400px; 
+    margin: 16px auto; 
+}
+
+.flash-success { 
+    color: #3D5A2C; 
+    background: #E4E9DA; 
+    padding: 10px 14px; 
+    border-radius: 4px; 
+    max-width: 400px; 
+    margin: 16px auto;
+}
+
+.admin-table { 
+    width: 100%; 
+    border-collapse: 
+    collapse; 
+    margin-top: 20px; 
+}
+
+.admin-table th, .admin-table td { 
+    border: 1px solid #ddd; 
+    padding: 10px 14px; 
+    text-align: left; 
+}
+
+.admin-table th { background: #2c3e50; 
+    color: white; 
+}
+
+:root {
+    --felt: #2E5E4E;
+    --felt-dark: #23473B;
+
+    --card: #FFFFFF;
+    --card-line: #DDD6C8;
+
+    --ink: #2F2F2F;
+
+    --stamp-red: #B54848;
+    --dice-gold: #D8A43D;
+
+    --paper: #F6F3EC;
+
+    --font-display: "Poppins", sans-serif;
+    --font-mono: "Poppins", sans-serif;
+    --font-body: "Poppins", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+
+/* header */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    background: white;
+    border-bottom: 1px solid var(--card-line);
+    color: var(--ink);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size:1.6rem;
+    color: var(--felt);
+}
+
+.brand-mark { color: var(--dice-gold); font-size: 1.5rem; }
+
+.header-nav a{
+    color: var(--ink);
+    text-decoration:none;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:8px;
+    transition:.2s;
+}
+
+.header-nav a:hover{
+    background:#F2ECE1;
+    color:var(--felt);
+}
+
+.header-nav a:hover { opacity: 1; text-decoration: underline; }
+
+.nav-cta {
+    background: var(--stamp-red);
+    padding: 6px 14px;
+    border-radius: 3px;
+    opacity: 1 !important;
+}
+
+/* hero */
+.hero, .dash-intro {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 24px 40px;
+    text-align: center;
+}
+.hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--stamp-red);
+    margin-bottom: 12px;
+}
+.hero-title {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 20px;
+}
+.hero-sub {
+    font-size: 1.05rem;
+    color: #4A4737;
+    margin-bottom: 32px;
+}
+
+/* stamp button */
+.stamp-button{
+    display:inline-block;
+    background:var(--felt);
+    color:white;
+    text-decoration:none;
+    padding:14px 30px;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.stamp-button:hover{
+    background:var(--felt-dark);
+    transform:translateY(-2px);
+}
+
+/* catalog / index cards */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 24px 80px;
+}
+.index-card {
+    position: relative;
+    background:white;
+    border:1px solid var(--card-line);
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.05);
+    transition:.2s;
+    padding: 28px 24px 24px;
+    text-decoration: none;
+    color: var(--ink);
+    display: block;
+}
+
+.index-card::before {
+    content: "";
+    position: absolute;
+    top: 22px; left: 0; right: 0;
+    border-top: 1px solid var(--card-line);
+}
+.card-hole {
+    position: absolute;
+    top: 10px; left: 14px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--card-line);
+}
+.card-no {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--stamp-red);
+    margin: 18px 0 10px;
+}
+.index-card h3 {
+    font-family: var(--font-display);
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+}
+.index-card p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #55503D;
+}
+.tile { transition: transform 0.12s ease, box-shadow 0.12s ease; }
+
+.tile:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 25px rgba(0,0,0,.08);
+}
+
+.tile-admin { border-color: var(--dice-gold); }
+
+/* role stamp */
+.role-stamp {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border: 2px solid currentColor;
+    border-radius: 3px;
+    transform: rotate(-2deg);
+}
+.role-admin { color: var(--stamp-red); }
+.role-member { color: var(--felt); }
+
+/* forms */
+.form-section { max-width: 480px; margin: 60px auto; padding: 0 24px; }
+.form-card { padding: 32px; }
+.form-card h1 { font-family: var(--font-display); margin: 20px 0 16px; }
+.form-card label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    margin: 18px 0 6px;
+    text-transform: uppercase;
+}
+.hint { text-transform: none; color: #8A8368; font-size: 0.7rem; }
+.form-card input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--card-line);
+    border-radius: 8px;
+    background:white;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+}
+.form-card button { margin-top: 24px; }
+
+.flash {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin: 12px 0;
+}
+.flash-error { background: #F3D9D2; color: var(--stamp-red); }
+.flash-success { background: #E4E9DA; color: #3D5A2C; }
+
+/* footer */
+.site-footer{
+    text-align:center;
+    padding:40px 20px;
+    border-top:1px solid var(--card-line);
+    background:white;
+    color:#777;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -83,36 +406,36 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
-    background-color: #3498db;
-    border-color: #3498db;
+    background-color: var(--felt);
+    border-color: var(--felt);
 }
 
 .btn-primary:hover {
-    background-color: #2980b9;
-    border-color: #2980b9;
-    transform: scale(1.02); /* Slight grow effect */
+    background-color: var(--felt-dark);
+    border-color: var(--felt-dark);
+    transform: scale(1.02);
 }
 
 .btn-success {
-    background-color: #2ecc71;
-    border-color: #2ecc71;
+    background-color: #5E8C61;
+    border-color: #5E8C61;
 }
 
 .btn-success:hover {
-    background-color: #27ae60;
-    border-color: #27ae60;
+    background-color: #4B7350;
+    border-color: #4B7350;
 }
 
 .btn-warning {
-    background-color: #f1c40f;
-    border-color: #f1c40f;
-    color: #fff;
+    background-color: var(--dice-gold);
+    border-color: var(--dice-gold);
+    color: white;
 }
 
 .btn-warning:hover {
-    background-color: #f39c12;
-    border-color: #f39c12;
-    color: #fff;
+    background-color: #C9912F;
+    border-color: #C9912F;
+    color: white;
 }
 
 /* =========================================
@@ -235,10 +558,6 @@ footer a:hover {
 }
 
 /* Ensures the footer gets pushed to the bottom if the page content is short */
-body {
-    display: flex;
-    flex-direction: column;
-}
 
 main {
     flex: 1;

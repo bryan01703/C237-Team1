@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GameNight — Community Board Game Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <section class="hero">
+        <p class="hero-eyebrow">CATALOG NO. 001 — EST. THIS SEMESTER</p>
+        <h1 class="hero-title">Every game on the shelf,<br>always accounted for.</h1>
+        <p class="hero-sub">GameNight is the shared checkout system for your club's board game
+            collection — browse what's on the shelf, reserve what's out, and never lose track of
+            who has Catan again.</p>
+        <a href="/register" class="stamp-button">Join the Library</a>
+    </section>
+
+    <section class="catalog-grid">
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 01</span>
+            <h3>Browse the Shelf</h3>
+            <p>Filter by player count, difficulty, or genre before you commit to lugging a box home.</p>
+        </div>
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 02</span>
+            <h3>Check Out & Return</h3>
+            <p>Every borrow is logged — due dates, condition, and history, no more guessing games.</p>
+        </div>
+        <div class="index-card">
+            <span class="card-hole"></span>
+            <span class="card-no">NO. 03</span>
+            <h3>Join the Waitlist</h3>
+            <p>Game's taken? Queue up — you're notified the moment it's checked back in.</p>
+        </div>
+    </section>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

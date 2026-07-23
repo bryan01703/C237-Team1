@@ -1,16 +1,25 @@
+const mysql = require('mysql2/promise');
 const express = require('express');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const path = require('path');
-const db = require('./config/db');
 require('dotenv').config();
-
 const app = express();
+
+const db = mysql.createConnection({
+    host: 'c237-adib-mysql.mysql.database.azure.com',
+    user: 'c237_026',
+    password: 'c237026@2026!',
+    database: 'c237_026_team1_gamenight',
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
 // View engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views(ejs)'));
+app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -36,16 +45,16 @@ app.use((req, res, next) => {
 });
 
 // Routes 
-const authRoutes = require('./routes/authRoutes');
+const authRoutes = require('./routes/authroutes');
 app.use('/', authRoutes);
 
-const gameRoutes = require('./routes/gameRoutes');
-const borrowRoutes = require('./routes/borrowRoutes');
-const searchRoutes = require('./routes/searchRoutes');
+const gameroutes = require('./routes/gameroutes');
+const borrowroutes = require('./routes/borrowroutes');
+const searchroutes = require('./routes/searchroutes');
 
-app.use('/games', gameRoutes);
-app.use('/borrow', borrowRoutes);
-app.use('/search', searchRoutes);
+app.use('/games', gameroutes);
+app.use('/borrow', borrowroutes);
+app.use('/search', searchroutes);
 
 // homepage with data analytics
 app.get('/', async (req, res) => {

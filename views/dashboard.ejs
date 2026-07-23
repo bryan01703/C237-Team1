@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard — GameNight</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <section class="catalog-grid dash-grid">
+        <a href="/games" class="index-card tile">
+            <span class="card-hole"></span>
+            <span class="card-no">SHELF</span>
+            <h3>Browse Games</h3>
+            <p>See the full catalog and current availability.</p>
+        </a>
+        <a href="/borrow/mine" class="index-card tile">
+            <span class="card-hole"></span>
+            <span class="card-no">MINE</span>
+            <h3>My Borrowed Games</h3>
+            <p>Track what you've checked out and when it's due.</p>
+        </a>
+        <a href="/search" class="index-card tile">
+            <span class="card-hole"></span>
+            <span class="card-no">FIND</span>
+            <h3>Search &amp; Filter</h3>
+            <p>Narrow the shelf by genre, players, or difficulty.</p>
+        </a>
+
+        <% if (user.role === 'admin') { %>
+        <a href="/games/add" class="index-card tile tile-admin">
+            <span class="card-hole"></span>
+            <span class="card-no">ADD</span>
+            <h3>Add a Game</h3>
+            <p>Register a new title into the catalog.</p>
+        </a>
+        <a href="/admin/users" class="index-card tile tile-admin">
+            <span class="card-hole"></span>
+            <span class="card-no">MEMBERS</span>
+            <h3>Manage Users</h3>
+            <p>View and edit member accounts.</p>
+        </a>
+        <% } %>
+    </section>
+    <%- include('partials/footer') %>
+</body>
+</html>

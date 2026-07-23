@@ -1,0 +1,116 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+
+<main class="container py-5">
+
+    <div class="mb-4">
+
+        <h1 class="fw-bold">
+            My Borrowed Games
+        </h1>
+
+        <p class="text-muted">
+            View the games you have borrowed.
+        </p>
+
+    </div>
+
+    <% if (!borrowedGames || borrowedGames.length === 0) { %>
+
+        <div class="alert alert-info">
+            You have not borrowed any games.
+        </div>
+
+    <% } else { %>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Game</th>
+                        <th>Borrow Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <% borrowedGames.forEach(game => { %>
+
+                        <tr>
+
+                            <td><%= game.title %></td>
+
+                            <td>
+                                <%= new Date(game.borrow_date).toLocaleDateString() %>
+                            </td>
+
+                            <td>
+                                <%= new Date(game.due_date).toLocaleDateString() %>
+                            </td>
+
+                            <td>
+
+                                <% if (game.status === "active") { %>
+
+                                    <span class="badge bg-warning text-dark">
+                                        Active
+                                    </span>
+
+                                <% } else { %>
+
+                                    <span class="badge bg-success">
+                                        Returned
+                                    </span>
+
+                                <% } %>
+
+                            </td>
+
+                            <td>
+
+                                <% if (game.status === "active") { %>
+
+                                    <form action="/borrow/return/<%= game.record_id %>" method="POST">
+
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            Return
+                                        </button>
+
+                                    </form>
+
+                                <% } else { %>
+
+                                    <span class="text-muted">
+                                        Returned
+                                    </span>
+
+                                <% } %>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    <% } %>
+
+    <a href="/games" class="btn btn-secondary mt-3">
+        ← Back to Catalogue
+    </a>
+
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,7 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-const { isAdmin } = require('../middleware/authmiddleware'); // import isAdmin middleware for add and edit routes
+const { isAdmin } = require('../middleware/authmiddleware');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// automatically create the images directory if it doesn't exist
+const uploadDir = path.join(__dirname, '../public/images');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/images'); // save files locally
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
 // show add game Form
 router.get('/add', isAdmin, (req, res) => {
@@ -9,16 +29,14 @@ router.get('/add', isAdmin, (req, res) => {
 });
 
 // process add game Form
-router.post('/add', isAdmin, async (req, res) => {
-    const { 
-        title, genre, min_players, max_players, 
-        difficulty, game_condition, description, image_url 
-    } = req.body;
+router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
+    const { title, genre, min_players, max_players, difficulty, game_condition, description } = req.body;
+    // get filename from multer, or use placeholder if no file uploaded
+    const image_url = req.file ? req.file.filename : 'placeholder.jpg';
 
     try {
         await db.query(
-            `INSERT INTO games 
-            (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
+            `INSERT INTO games (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             [title, genre, min_players, max_players, difficulty, game_condition, description, image_url]
         );
@@ -26,86 +44,120 @@ router.post('/add', isAdmin, async (req, res) => {
         res.redirect('/games');
     } catch (error) {
         console.error('Error adding game:', error.message);
-        req.flash('error', 'Failed to add game. Please check your inputs.');
+        req.flash('error', 'Failed to add game.');
         res.redirect('/games/add');
     }
 });
 
 // show edit game form
 router.get('/edit/:id', isAdmin, async (req, res) => {
-    const gameId = req.params.id;
-
     try {
-        const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [gameId]);
-        
-        if (games.length === 0) {
-            req.flash('error', 'Game not found.');
-            return res.redirect('/games');
-        }
-
+        const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [req.params.id]);
+        if (games.length === 0) return res.redirect('/games');
         res.render('games/editgame', { game: games[0] });
     } catch (error) {
-        console.error('Error fetching game for edit:', error.message);
-        req.flash('error', 'Could not load the edit form.');
         res.redirect('/games');
     }
 });
 
 // process edit game form
-router.post('/edit/:id', isAdmin, async (req, res) => {
-    const gameId = req.params.id;
-    const { 
-        title, genre, min_players, max_players, 
-        difficulty, game_condition, description, image_url 
-    } = req.body;
+router.post('/edit/:id', isAdmin, upload.single('image'), async (req, res) => {
+    const { title, genre, min_players, max_players, difficulty, game_condition, description, existing_image } = req.body;
+    // if a new file is uploaded, use it. otherwise, keep the existing image string.
+    const image_url = req.file ? req.file.filename : existing_image;
 
     try {
         await db.query(
-            `UPDATE games 
-            SET title = ?, genre = ?, min_players = ?, max_players = ?, 
-                difficulty = ?, game_condition = ?, description = ?, image_url = ? 
-            WHERE game_id = ?`,
-            [title, genre, min_players, max_players, difficulty, game_condition, description, image_url, gameId]
+            `UPDATE games SET title = ?, genre = ?, min_players = ?, max_players = ?, 
+             difficulty = ?, game_condition = ?, description = ?, image_url = ? WHERE game_id = ?`,
+            [title, genre, min_players, max_players, difficulty, game_condition, description, image_url, req.params.id]
         );
-        req.flash('success', 'Game details updated successfully!');
-        res.redirect(`/games/${gameId}`); // redirect to detail page after successful update
+        req.flash('success', 'Game updated successfully!');
+        res.redirect(`/games/${req.params.id}`);
     } catch (error) {
-        console.error('Error updating game:', error.message);
-        req.flash('error', 'Failed to update game details.');
-        res.redirect(`/games/edit/${gameId}`);
+        res.redirect(`/games/edit/${req.params.id}`);
     }
 });
 
-// B's fixed add/edit routes should stay above C's dynamic /:id route.
+// retire and delete routes
+// soft delete (retire) - hides from catalog, preserves borrow history
+router.post('/retire/:id', isAdmin, async (req, res) => {
+    try {
+        await db.query('UPDATE games SET archived = TRUE WHERE game_id = ?', [req.params.id]);
+        req.flash('success', 'Game retired and hidden from public view.');
+        res.redirect(`/games/${req.params.id}`);
+    } catch (error) {
+        req.flash('error', 'Failed to retire game.');
+        res.redirect(`/games/${req.params.id}`);
+    }
+});
+
+// unretire - restores a game to the public catalog
+router.post('/unretire/:id', isAdmin, async (req, res) => {
+    try {
+        await db.query('UPDATE games SET archived = FALSE WHERE game_id = ?', [req.params.id]);
+        req.flash('success', 'Game unretired and restored to the catalog.');
+        res.redirect(`/games/${req.params.id}`);
+    } catch (error) {
+        req.flash('error', 'Failed to unretire game.');
+        res.redirect('/games');
+    }
+});
+
+// hard delete - protected against wiping borrow history
+router.post('/delete/:id', isAdmin, async (req, res) => {
+    try {
+        // check if any borrow records exist for this game
+        const [records] = await db.query('SELECT 1 FROM borrow_records WHERE game_id = ? LIMIT 1', [req.params.id]);
+        
+        // if records exist, block the deletion to save the history
+        if (records.length > 0) {
+            req.flash('error', 'Cannot hard-delete a game that has existing borrow history. Please Retire it instead.');
+            return res.redirect(`/games/${req.params.id}`);
+        }
+
+        // if no records exist, it is safe to delete
+        await db.query('DELETE FROM games WHERE game_id = ?', [req.params.id]);
+        req.flash('success', 'Game permanently deleted.');
+        res.redirect('/games');
+    } catch (error) {
+        req.flash('error', 'Error attempting to delete game.');
+        res.redirect(`/games/${req.params.id}`);
+    }
+});
+
+// public routes
 const availabilitySql = `CASE WHEN EXISTS (
-    SELECT 1 FROM borrow_records br
-    WHERE br.game_id = g.game_id AND br.status = 'active'
+    SELECT 1 FROM borrow_records br WHERE br.game_id = g.game_id AND br.status = 'active'
 ) THEN 'unavailable' ELSE 'available' END`;
 
 router.get('/', async (req, res) => {
     try {
-        const [games] = await db.query(`
+        let query = `
             SELECT g.*, ${availabilitySql} AS availability,
-                (SELECT ROUND(AVG(r.rating), 1)
-                 FROM reviews r WHERE r.game_id = g.game_id) AS average_rating,
-                (SELECT COUNT(*)
-                 FROM reviews r WHERE r.game_id = g.game_id) AS review_count
-            FROM games g ORDER BY g.title ASC
-        `);
+                (SELECT ROUND(AVG(r.rating), 1) FROM reviews r WHERE r.game_id = g.game_id) AS average_rating,
+                (SELECT COUNT(*) FROM reviews r WHERE r.game_id = g.game_id) AS review_count
+            FROM games g WHERE g.archived = FALSE ORDER BY g.title ASC
+        `;
+
+        // If the user is logged in and is an admin, fetch ALL games (including archived)
+        if (req.session.user && req.session.user.role === 'admin') {
+            query = `
+                SELECT g.*, ${availabilitySql} AS availability,
+                    (SELECT ROUND(AVG(r.rating), 1) FROM reviews r WHERE r.game_id = g.game_id) AS average_rating,
+                    (SELECT COUNT(*) FROM reviews r WHERE r.game_id = g.game_id) AS review_count
+                FROM games g ORDER BY g.archived ASC, g.title ASC
+            `;
+        }
+
+        const [games] = await db.query(query);
         return res.render('games/catalog', { games });
     } catch (error) {
-        console.error('Error retrieving game catalogue:', error.message);
-        req.flash('error', 'The game catalogue could not be loaded. Please try again.');
         return res.status(500).render('games/catalog', { games: [] });
     }
 });
 
 router.get('/:id', async (req, res) => {
-    const gameId = Number(req.params.id);
-    if (!Number.isSafeInteger(gameId) || gameId <= 0) {
-        return res.status(400).send('Invalid game ID.');
-    }
-
     try {
         const [games] = await db.query(`
             SELECT g.*, ${availabilitySql} AS availability,
@@ -117,11 +169,13 @@ router.get('/:id', async (req, res) => {
                 ,(SELECT COUNT(*)
                   FROM reviews r WHERE r.game_id = g.game_id) AS review_count
             FROM games g WHERE g.game_id = ? LIMIT 1
-        `, [gameId]);
+        `, [req.params.id]);
 
         if (games.length === 0) {
             return res.status(404).send('Game not found.');
         }
+
+        // Fetch all reviews for this specific game
         const [reviews] = await db.query(`
             SELECT r.review_id, r.user_id, r.rating, r.comment,
                    r.created_at, r.updated_at, u.username
@@ -129,12 +183,11 @@ router.get('/:id', async (req, res) => {
             JOIN users u ON u.user_id = r.user_id
             WHERE r.game_id = ?
             ORDER BY r.updated_at DESC
-        `, [gameId]);
+        `, [req.params.id]);
 
         return res.render('games/details', { game: games[0], reviews });
     } catch (error) {
-        console.error('Error retrieving game details:', error.message);
-        return res.status(500).send('The game details could not be loaded. Please try again.');
+        return res.status(500).send('Error');
     }
 });
 

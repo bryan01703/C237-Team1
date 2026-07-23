@@ -1,5 +1,5 @@
 /* Import a modern Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
 
 /* =========================================
    GENERAL STYLING & TYPOGRAPHY
@@ -11,10 +11,10 @@ body {
     display: flex;
     flex-direction: column;
 
-    background: #f4f7f8;
-    color: #333;
+    background: #f7f1e8;
+    color: #33251f;
 
-    font-family: "Poppins", sans-serif;
+    font-family: "DM Sans", sans-serif;
     line-height: 1.5;
 }
 
@@ -22,14 +22,14 @@ body {
 .hero {
     text-align: center;
     padding: 60px 20px;
-    background: #f4f4f4;
+    background: #f3e7d7;
 }
 
 .cta-button { 
     display: inline-block; 
     margin-top: 16px; 
     padding: 12px 24px; 
-    background: #2c3e50; 
+    background: #6f4e37;
     color: white; 
     text-decoration: none; 
     border-radius: 6px; 
@@ -59,15 +59,15 @@ body {
     padding: 24px;
     text-align: center;
     text-decoration: none;
-    color: #333;
-    background: #f9f9f9;
+    color: #33251f;
+    background: #fffaf4;
 }
 .home-card:hover {
-    background: #eee;
+    background: #efe2d0;
 }
 
-.flash-error { color: #A13D2B; 
-    background: #F3D9D2; 
+.flash-error { color: #8f4938;
+    background: #f2d9ce;
     padding: 10px 14px; 
     border-radius: 4px; 
     max-width: 400px; 
@@ -75,8 +75,8 @@ body {
 }
 
 .flash-success { 
-    color: #3D5A2C; 
-    background: #E4E9DA; 
+    color: #526148;
+    background: #e2e8d9;
     padding: 10px 14px; 
     border-radius: 4px; 
     max-width: 400px; 
@@ -85,38 +85,37 @@ body {
 
 .admin-table { 
     width: 100%; 
-    border-collapse: 
-    collapse; 
+    border-collapse: collapse;
     margin-top: 20px; 
 }
 
 .admin-table th, .admin-table td { 
-    border: 1px solid #ddd; 
+    border: 1px solid #d8c7b5;
     padding: 10px 14px; 
     text-align: left; 
 }
 
-.admin-table th { background: #2c3e50; 
+ .admin-table th { background: #4a2c20;
     color: white; 
 }
 
 :root {
-    --felt: #2E5E4E;
-    --felt-dark: #23473B;
+    --felt: #6F4E37;
+    --felt-dark: #4A2C20;
 
-    --card: #FFFFFF;
-    --card-line: #DDD6C8;
+    --card: #FFFAF4;
+    --card-line: #D8C7B5;
 
-    --ink: #2F2F2F;
+    --ink: #33251F;
 
-    --stamp-red: #B54848;
-    --dice-gold: #D8A43D;
+    --stamp-red: #A85D45;
+    --dice-gold: #C58B45;
 
-    --paper: #F6F3EC;
+    --paper: #F5EBDD;
 
-    --font-display: "Poppins", sans-serif;
-    --font-mono: "Poppins", sans-serif;
-    --font-body: "Poppins", sans-serif;
+    --font-display: "Playfair Display", serif;
+    --font-mono: "DM Sans", sans-serif;
+    --font-body: "DM Sans", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -128,7 +127,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 18px 40px;
-    background: white;
+    background: var(--card);
     border-bottom: 1px solid var(--card-line);
     color: var(--ink);
 }
@@ -191,7 +190,7 @@ body {
 }
 .hero-sub {
     font-size: 1.05rem;
-    color: #4A4737;
+    color: #665044;
     margin-bottom: 32px;
 }
 
@@ -224,7 +223,7 @@ body {
 }
 .index-card {
     position: relative;
-    background:white;
+     background:var(--card);
     border:1px solid var(--card-line);
     border-radius:12px;
     box-shadow:0 3px 10px rgba(0,0,0,.05);
@@ -265,7 +264,7 @@ body {
 .index-card p {
     margin: 0;
     font-size: 0.92rem;
-    color: #55503D;
+     color: #665044;
 }
 .tile { transition: transform 0.12s ease, box-shadow 0.12s ease; }
 
@@ -303,13 +302,13 @@ body {
     margin: 18px 0 6px;
     text-transform: uppercase;
 }
-.hint { text-transform: none; color: #8A8368; font-size: 0.7rem; }
+.hint { text-transform: none; color: #8b7564; font-size: 0.7rem; }
 .form-card input {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid var(--card-line);
     border-radius: 8px;
-    background:white;
+    background:var(--card);
     font-family: var(--font-body);
     font-size: 0.95rem;
 }
@@ -322,21 +321,21 @@ body {
     border-radius: 4px;
     margin: 12px 0;
 }
-.flash-error { background: #F3D9D2; color: var(--stamp-red); }
-.flash-success { background: #E4E9DA; color: #3D5A2C; }
+.flash-error { background: #F2D9CE; color: var(--stamp-red); }
+.flash-success { background: #E2E8D9; color: #526148; }
 
 /* footer */
 .site-footer{
     text-align:center;
     padding:40px 20px;
     border-top:1px solid var(--card-line);
-    background:white;
-    color:#777;
+    background:var(--card);
+    color:#806f62;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    color: #1a252f;
+    color: var(--ink);
 }
 
 /* =========================================
@@ -356,14 +355,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.2) !important;
+    box-shadow: 0 0 0 0.25rem rgba(111, 78, 55, 0.22) !important;
 }
 
 .game-card-image {
     width: 100%;
     height: 240px;
     object-fit: cover;
-    border-bottom: 3px solid #f8f9fa; /* Slight separator */
+    border-bottom: 3px solid var(--paper); /* Slight separator */
 }
 
 .game-detail-image {
@@ -379,8 +378,8 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-    color: #6c757d;
+    background: linear-gradient(135deg, #f0e3d4 0%, #dfcbb8 100%);
+    color: #725d4e;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -417,13 +416,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-success {
-    background-color: #5E8C61;
-    border-color: #5E8C61;
+    background-color: #6E7D63;
+    border-color: #6E7D63;
 }
 
 .btn-success:hover {
-    background-color: #4B7350;
-    border-color: #4B7350;
+    background-color: #58664f;
+    border-color: #58664f;
 }
 
 .btn-warning {
@@ -433,8 +432,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-warning:hover {
-    background-color: #C9912F;
-    border-color: #C9912F;
+    background-color: #a96f32;
+    border-color: #a96f32;
     color: white;
 }
 
@@ -443,21 +442,21 @@ h1, h2, h3, h4, h5, h6 {
    ========================================= */
 .form-control, .form-select {
     border-radius: 8px;
-    border: 1px solid #ced4da;
+    border: 1px solid #d8c7b5;
     padding: 12px 15px;
     font-size: 0.95rem;
-    background-color: #fcfcfc;
+    background-color: #fffdf9;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-control:focus, .form-select:focus {
-    background-color: #ffffff;
-    border-color: #3498db;
-    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.15);
+    background-color: #fffaf4;
+    border-color: var(--dice-gold);
+    box-shadow: 0 0 0 0.25rem rgba(197, 139, 69, 0.18);
 }
 
 .form-label {
-    color: #34495e;
+    color: #5a4437;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -502,15 +501,15 @@ h1, h2, h3, h4, h5, h6 {
    NAVBAR STYLING
    ========================================= */
 .navbar {
-    background-color: #ffffff !important;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04); /* Soft shadow separating it from the body */
+    background-color: var(--card) !important;
+    box-shadow: 0 2px 15px rgba(74, 44, 32, 0.08); /* Soft shadow separating it from the body */
     padding: 12px 0;
 }
 
 .navbar-brand {
     font-weight: 700;
     font-size: 1.5rem;
-    color: #3498db !important;
+    color: var(--felt) !important;
     letter-spacing: 0.5px;
     transition: transform 0.2s ease;
 }
@@ -521,39 +520,39 @@ h1, h2, h3, h4, h5, h6 {
 
 .nav-link {
     font-weight: 500;
-    color: #34495e !important;
+    color: #5a4437 !important;
     transition: color 0.2s ease-in-out;
     margin: 0 5px;
     border-radius: 6px;
 }
 
 .nav-link:hover, .nav-link.active {
-    color: #3498db !important;
-    background-color: rgba(52, 152, 219, 0.05); /* Subtle highlight behind the link */
+    color: var(--felt) !important;
+    background-color: rgba(111, 78, 55, 0.08); /* Subtle highlight behind the link */
 }
 
 /* =========================================
    FOOTER STYLING
    ========================================= */
 footer {
-    background-color: #ffffff;
-    border-top: 1px solid #e9ecef; /* Clean separator line */
+    background-color: var(--card);
+    border-top: 1px solid var(--card-line); /* Clean separator line */
     padding: 25px 0;
     margin-top: 50px;
-    color: #6c757d;
+    color: #806f62;
     font-size: 0.9rem;
     text-align: center;
 }
 
 footer a {
-    color: #3498db;
+    color: var(--felt);
     text-decoration: none;
     font-weight: 500;
     transition: color 0.2s ease;
 }
 
 footer a:hover {
-    color: #2980b9;
+    color: var(--felt-dark);
     text-decoration: underline;
 }
 

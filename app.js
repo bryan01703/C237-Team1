@@ -51,11 +51,13 @@ app.use('/', authroutes);
 const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');
 const searchroutes = require('./routes/searchroutes');
+const reviewroutes = require('./routes/reviewroutes');
 
 app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/waitlist', borrowroutes);
 app.use('/search', searchroutes);
+app.use('/reviews', reviewroutes);
 
 // 404 handler
 app.use((req, res) => {

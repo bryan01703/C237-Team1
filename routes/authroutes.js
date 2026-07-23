@@ -206,19 +206,24 @@ router.get('/admin/users/edit/:id', isAdmin, async (req, res) => {
         }
 
         const [borrowHistory] = await db.query(
-            `SELECT
-                br.record_id,
-                br.game_id,
-                br.borrow_date,
-                br.due_date,
-                br.return_date,
-                br.status,
-                g.title
-             FROM borrow_records br
-             JOIN games g ON br.game_id = g.game_id
-             WHERE br.user_id = ?
-             ORDER BY br.borrow_date DESC`,
-            [req.params.id]
+        `SELECT
+            br.record_id,
+            br.game_id,
+            br.borrow_date,
+            br.due_date,
+            br.return_date,
+            br.status,
+            g.title,
+            CASE
+                WHEN br.status = 'returned' THEN 'returned'
+                WHEN br.due_date < CURDATE() THEN 'overdue'
+                ELSE 'active'
+            END AS display_status
+        FROM borrow_records br
+        JOIN games g ON br.game_id = g.game_id
+        WHERE br.user_id = ?
+        ORDER BY br.borrow_date DESC`,
+        [req.params.id]
         );
 
         res.render('admin/editusers', {
@@ -231,6 +236,48 @@ router.get('/admin/users/edit/:id', isAdmin, async (req, res) => {
         res.redirect('/admin/users');
     }
 });
+
+router.get(
+    '/admin/users/:userId/borrow/:recordId/edit',
+    isAdmin,
+    async (req, res) => {
+        try {
+            const [records] = await db.query(
+                `SELECT
+                    br.record_id,
+                    br.borrow_date,
+                    br.due_date,
+                    br.return_date,
+                    br.status,
+                    g.title
+                 FROM borrow_records br
+                 JOIN games g ON br.game_id = g.game_id
+                 WHERE br.record_id = ?
+                   AND br.user_id = ?`,
+                [
+                    req.params.recordId,
+                    req.params.userId
+                ]
+            );
+
+            if (records.length === 0) {
+                req.flash('error', 'Borrowing record not found');
+                return res.redirect(
+                    `/admin/users/edit/${req.params.userId}`
+                );
+            }
+
+            res.render('admin/editborrow', {
+                userId: req.params.userId,
+                record: records[0]
+            });
+        } catch (err) {
+            console.error(err);
+            req.flash('error', 'Could not load borrowing record');
+            res.redirect(`/admin/users/edit/${req.params.userId}`);
+        }
+    }
+);
 
 router.post(
     '/admin/users/:userId/borrow/:recordId/update',
@@ -302,8 +349,61 @@ router.get('/', (req, res) => {
 });
 
 // dashboard post login
-router.get('/dashboard', isLoggedIn, (req, res) => {
-    res.render('dashboard');
+router.get('/dashboard', isLoggedIn, async (req, res) => {
+    try {
+        let stats = null;
+
+        if (req.session.user.role === 'admin') {
+            const [
+                [userCount],
+                [gameCount],
+                [activeBorrowCount],
+                [overdueBorrowCount],
+                [returnedBorrowCount]
+            ] = await Promise.all([
+                db.query(
+                    `SELECT COUNT(*) AS count
+                     FROM users
+                     WHERE role = 'member'`
+                ),
+                db.query(
+                    `SELECT COUNT(*) AS count
+                     FROM games
+                     WHERE archived = FALSE`
+                ),
+                db.query(
+                    `SELECT COUNT(*) AS count
+                     FROM borrow_records
+                     WHERE status = 'active'`
+                ),
+                db.query(
+                    `SELECT COUNT(*) AS count
+                     FROM borrow_records
+                     WHERE status = 'active'
+                       AND due_date < CURDATE()`
+                ),
+                db.query(
+                    `SELECT COUNT(*) AS count
+                     FROM borrow_records
+                     WHERE status = 'returned'`
+                )
+            ]);
+
+            stats = {
+                users: userCount[0].count,
+                games: gameCount[0].count,
+                activeBorrows: activeBorrowCount[0].count,
+                overdueBorrows: overdueBorrowCount[0].count,
+                returnedBorrows: returnedBorrowCount[0].count
+            };
+        }
+
+        res.render('dashboard', { stats });
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Could not load dashboard statistics');
+        res.render('dashboard', { stats: null });
+    }
 });
 
 module.exports = router;

@@ -44,6 +44,40 @@
         </a>
         <% } %>
     </section>
+        <% if (user.role === 'admin' && stats) { %>
+        <section class="catalog-grid admin-dashboard-stats">
+            <div class="index-card">
+                <span class="card-no">MEMBERS</span>
+                <h3><%= stats.users %></h3>
+                <p>Registered members</p>
+            </div>
+
+            <div class="index-card">
+                <span class="card-no">GAMES</span>
+                <h3><%= stats.games %></h3>
+                <p>Available catalogue games</p>
+            </div>
+
+            <div class="index-card">
+                <span class="card-no">ACTIVE</span>
+                <h3><%= stats.activeBorrows %></h3>
+                <p>Active borrowings</p>
+            </div>
+
+            <div class="index-card tile-admin">
+                <span class="card-no">OVERDUE</span>
+                <h3><%= stats.overdueBorrows %></h3>
+                <p>Overdue borrowings</p>
+            </div>
+
+            <div class="index-card">
+                <span class="card-no">RETURNED</span>
+                <h3><%= stats.returnedBorrows %></h3>
+                <p>Returned games</p>
+            </div>
+        </section>
+    <% } %>
+
     <%- include('partials/footer') %>
 </body>
 </html>

@@ -184,8 +184,16 @@ router.get('/:id', async (req, res) => {
             WHERE r.game_id = ?
             ORDER BY r.updated_at DESC
         `, [req.params.id]);
+        let isWishlisted = false;
+        if (req.session.user) {
+            const [wishlistRows] = await db.query(
+                'SELECT wishlist_id FROM wishlist WHERE game_id = ? AND user_id = ?',
+                [req.params.id, req.session.user.id]
+            );
+            isWishlisted = wishlistRows.length > 0;
+        }
 
-        return res.render('games/details', { game: games[0], reviews });
+        return res.render('games/details', { game: games[0], reviews, isWishlisted });
     } catch (error) {
         return res.status(500).send('Error');
     }

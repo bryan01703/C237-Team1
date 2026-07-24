@@ -4,11 +4,19 @@ const db = require('../config/db');
 const { isLoggedIn } = require('../middleware/authmiddleware');
 const { MEMBER, ADMIN } = require('../config/roles');
 
+/*
+ * REVIEWS & RATINGS CRUD MODULE
+ * Members can create, update and delete their own review. Reviews are read on
+ * the game details page, and admins can delete any review for moderation.
+ * All database values use parameterised queries to reduce SQL injection risk.
+ */
+
 function validPositiveId(value) {
     const id = Number(value);
     return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
+// Validate again on the server because browser form validation can be bypassed.
 function validateReview(ratingValue, commentValue) {
     const rating = Number(ratingValue);
     const comment = typeof commentValue === 'string' ? commentValue.trim() : '';
@@ -52,6 +60,7 @@ router.post('/games/:gameId', isLoggedIn, async (req, res) => {
         );
         req.flash('success', 'Your review was added successfully.');
     } catch (error) {
+        // The UNIQUE database constraint permits one review per user per game.
         if (error.code === 'ER_DUP_ENTRY') {
             req.flash('error', 'You have already reviewed this game. You can edit your review instead.');
         } else {
@@ -111,6 +120,7 @@ router.post('/:reviewId/delete', isLoggedIn, async (req, res) => {
     }
 
     try {
+        // Admin can delete any review; a member must also match its user_id.
         const sql = req.session.user.role === ADMIN
             ? 'DELETE FROM reviews WHERE review_id = ? AND game_id = ?'
             : 'DELETE FROM reviews WHERE review_id = ? AND user_id = ? AND game_id = ?';

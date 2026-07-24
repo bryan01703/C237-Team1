@@ -6,6 +6,13 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+/*
+ * GAME CATALOGUE MODULE
+ * This file combines Function B's game management routes with Function C's
+ * catalogue and details routes. Function C handles the Read part of CRUD,
+ * live availability, average ratings and the review list for each game.
+ */
+
 // automatically create the images directory if it doesn't exist
 const uploadDir = path.join(__dirname, '../public/images');
 if (!fs.existsSync(uploadDir)) {
@@ -126,11 +133,13 @@ router.post('/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-// public routes
+// PUBLIC READ ROUTES (Function C)
+// A game becomes unavailable when an active borrow record exists.
 const availabilitySql = `CASE WHEN EXISTS (
     SELECT 1 FROM borrow_records br WHERE br.game_id = g.game_id AND br.status = 'active'
 ) THEN 'unavailable' ELSE 'available' END`;
 
+// READ (list): display non-archived games to members and all games to admins.
 router.get('/', async (req, res) => {
     try {
         let query = `
@@ -157,6 +166,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// READ (single): display one game's details, due date and member reviews.
 router.get('/:id', async (req, res) => {
     try {
         const [games] = await db.query(`

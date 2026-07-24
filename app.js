@@ -57,6 +57,7 @@ app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/waitlist', borrowroutes);
 app.use('/search', searchroutes);
+// Mount Review CRUD routes, for example POST /reviews/games/:gameId.
 app.use('/reviews', reviewroutes);
 
 // 404 handler

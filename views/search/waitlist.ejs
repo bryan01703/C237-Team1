@@ -1,0 +1,110 @@
+<%- include('../partials/header') %>
+
+<main class="container py-5" aria-labelledby="wishlist-title">
+
+    <div class="mb-4">
+        <h1 id="wishlist-title" class="fw-bold">My Wishlist</h1>
+        <p class="text-muted mb-0">
+            Games you've saved for later — available or not.
+        </p>
+    </div>
+
+    <% if (!entries || entries.length === 0) { %>
+
+        <div class="alert alert-info">
+            You haven't saved any games yet.
+            <a href="/search">Search the catalogue</a> and click "Add to Wishlist" on any game.
+        </div>
+
+    <% } else { %>
+
+        <div class="row g-4">
+
+            <% entries.forEach(entry => { %>
+
+                <div class="col-sm-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <% if (entry.image_url) { %>
+
+                            <img
+                                src="<%=
+                                    entry.image_url.startsWith('http')
+                                        ? entry.image_url
+                                        : '/images/' + entry.image_url
+                                %>"
+                                class="card-img-top game-card-image"
+                                alt="<%= entry.title %>"
+                            >
+
+                        <% } else { %>
+
+                            <div class="game-image-placeholder">
+                                No image available
+                            </div>
+
+                        <% } %>
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <h2 class="card-title h4 mb-0">
+                                    <%= entry.title %>
+                                </h2>
+
+                                <% if (entry.availability === 'available') { %>
+                                    <span class="badge bg-success">Available</span>
+                                <% } else { %>
+                                    <span class="badge bg-danger">Unavailable</span>
+                                <% } %>
+                            </div>
+
+                            <p class="card-text mb-2">
+                                <strong>Genre:</strong>
+                                <%= entry.genre || 'Not specified' %>
+                            </p>
+
+                            <p class="card-text mb-2">
+                                <strong>Difficulty:</strong>
+                                <span class="text-capitalize"><%= entry.difficulty || 'Not specified' %></span>
+                            </p>
+
+                            <p class="card-text mb-0">
+                                <strong>Saved:</strong>
+                                <%= new Intl.DateTimeFormat('en-SG', {
+                                    day: 'numeric', month: 'short', year: 'numeric',
+                                    timeZone: 'Asia/Singapore'
+                                }).format(new Date(entry.added_at)) %>
+                            </p>
+
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pb-3 d-flex flex-column gap-2">
+                            
+                                href="/games/<%= entry.game_id %>"
+                                class="btn btn-primary w-100"
+                            >
+                                View Game
+                            </a>
+
+                            <form action="/wishlist/remove/<%= entry.wishlist_id %>" method="POST">
+                                <button type="submit" class="btn btn-outline-secondary w-100">
+                                    Remove from Wishlist
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } %>
+
+</main>
+
+<%- include('../partials/footer') %>

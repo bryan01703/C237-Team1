@@ -55,6 +55,14 @@
                                 style="display: none;"
                             ></form>
 
+                            <form
+                                id="borrow-delete-<%= record.record_id %>"
+                                action="/admin/users/<%= user.user_id %>/borrow/<%= record.record_id %>/delete"
+                                method="POST"
+                                style="display: none;"
+                                onsubmit="return confirm('Delete this borrowing record? This cannot be undone.');"
+                            ></form>
+
                             <%= record.title %>
                         </td>
 
@@ -115,8 +123,18 @@
                                 type="submit"
                                 form="borrow-update-<%= record.record_id %>"
                                 class="btn btn-primary"
+                                style="background-color: #A85D45; border-color: #A85D45; color: white;"
                             >
                                 Save
+                            </button>
+
+                            <button
+                                type="submit"
+                                form="borrow-delete-<%= record.record_id %>"
+                                class="btn btn-primary"
+                                style="background-color: #A85D45; border-color: #A85D45; color: white;"
+                            >
+                                Delete
                             </button>
                         </td>
                     </tr>

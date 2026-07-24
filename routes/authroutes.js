@@ -321,6 +321,27 @@ router.post(
     }
 );
 
+// admin deletes a single borrowing history record for a user
+router.post(
+    '/admin/users/:userId/borrow/:recordId/delete',
+    isAdmin,
+    async (req, res) => {
+        try {
+            await db.query(
+                'DELETE FROM borrow_records WHERE record_id = ? AND user_id = ?',
+                [req.params.recordId, req.params.userId]
+            );
+
+            req.flash('success', 'Borrowing record deleted successfully');
+            res.redirect(`/admin/users/edit/${req.params.userId}`);
+        } catch (err) {
+            console.error(err);
+            req.flash('error', 'Could not delete borrowing record');
+            res.redirect(`/admin/users/edit/${req.params.userId}`);
+        }
+    }
+);
+
 // updaste user details, checks if there is admin
 router.post('/admin/users/edit/:id', isAdmin, async (req, res) => {
     const { username, password, role } = req.body;

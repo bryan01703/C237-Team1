@@ -290,19 +290,21 @@ router.post(
             status
         } = req.body;
 
+        const finalReturnDate = status === 'active' ? null : (return_date || null);
+
         try {
             await db.query(
                 `UPDATE borrow_records
-                 SET borrow_date = ?,
-                     due_date = ?,
-                     return_date = ?,
-                     status = ?
-                 WHERE record_id = ?
-                   AND user_id = ?`,
+                SET borrow_date = ?,
+                    due_date = ?,
+                    return_date = ?,
+                    status = ?
+                WHERE record_id = ?
+                    AND user_id = ?`,
                 [
                     borrow_date,
                     due_date,
-                    return_date || null,
+                    finalReturnDate,
                     status,
                     req.params.recordId,
                     req.params.userId

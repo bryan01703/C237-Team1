@@ -52,6 +52,7 @@
                                 id="borrow-update-<%= record.record_id %>"
                                 action="/admin/users/<%= user.user_id %>/borrow/<%= record.record_id %>/update"
                                 method="POST"
+                                style="display: none;"
                             ></form>
 
                             <%= record.title %>
@@ -66,7 +67,7 @@
                                     value="active"
                                     <%= record.status === 'active' ? 'selected' : '' %>
                                 >
-                                    <%= record.display_status %>
+                                    Active
                                 </option>
 
                                 <option

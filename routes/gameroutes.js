@@ -40,14 +40,9 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
     const { title, genre, min_players, max_players, difficulty, game_condition, description } = req.body;
     // get filename from multer, or use placeholder if no file uploaded
     const image_url = req.file ? req.file.filename : 'placeholder.jpg';
-router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
-    const { title, genre, min_players, max_players, difficulty, game_condition, description } = req.body;
-    // get filename from multer, or use placeholder if no file uploaded
-    const image_url = req.file ? req.file.filename : 'placeholder.jpg';
 
     try {
         await db.query(
-            `INSERT INTO games (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
             `INSERT INTO games (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             [title, genre, min_players, max_players, difficulty, game_condition, description, image_url]
@@ -57,7 +52,6 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('Error adding game:', error.message);
         req.flash('error', 'Failed to add game.');
-        req.flash('error', 'Failed to add game.');
         res.redirect('/games/add');
     }
 });
@@ -65,8 +59,6 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
 // show edit game form
 router.get('/edit/:id', isAdmin, async (req, res) => {
     try {
-        const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [req.params.id]);
-        if (games.length === 0) return res.redirect('/games');
         const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [req.params.id]);
         if (games.length === 0) return res.redirect('/games');
         res.render('games/editgame', { game: games[0] });

@@ -1,0 +1,207 @@
+<%- include('../partials/header') %>
+
+<main class="container py-5" aria-labelledby="search-title">
+
+    <div class="mb-4">
+        <h1 id="search-title" class="fw-bold">Search &amp; Filter Games</h1>
+        <p class="text-muted mb-0">
+            Find a game by name, or narrow the shelf by genre, difficulty, player count, or availability.
+        </p>
+    </div>
+
+    <form method="GET" action="/search" class="card shadow-sm p-4 mb-4" role="search" aria-label="Search and filter games">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-12 col-md-4">
+                <label for="q" class="form-label">Title</label>
+                <input
+                    type="text"
+                    id="q"
+                    name="q"
+                    class="form-control"
+                    placeholder="Search by game title..."
+                    value="<%= filters.q %>"
+                >
+            </div>
+
+            <div class="col-6 col-md-2">
+                <label for="genre" class="form-label">Genre</label>
+                <select id="genre" name="genre" class="form-select">
+                    <option value="">Any genre</option>
+                    <% genres.forEach(g => { %>
+                        <option value="<%= g %>" <%= filters.genre === g ? 'selected' : '' %>>
+                            <%= g %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <label for="difficulty" class="form-label">Difficulty</label>
+                <select id="difficulty" name="difficulty" class="form-select">
+                    <option value="">Any difficulty</option>
+                    <option value="easy" <%= filters.difficulty === 'easy' ? 'selected' : '' %>>Easy</option>
+                    <option value="medium" <%= filters.difficulty === 'medium' ? 'selected' : '' %>>Medium</option>
+                    <option value="hard" <%= filters.difficulty === 'hard' ? 'selected' : '' %>>Hard</option>
+                </select>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <label for="players" class="form-label">Players</label>
+                <input
+                    type="number"
+                    id="players"
+                    name="players"
+                    class="form-control"
+                    min="1"
+                    placeholder="e.g. 4"
+                    value="<%= filters.players %>"
+                >
+            </div>
+
+            <div class="col-6 col-md-2">
+                <label for="availability" class="form-label">Availability</label>
+                <select id="availability" name="availability" class="form-select">
+                    <option value="">Any status</option>
+                    <option value="available" <%= filters.availability === 'available' ? 'selected' : '' %>>Available</option>
+                    <option value="unavailable" <%= filters.availability === 'unavailable' ? 'selected' : '' %>>Unavailable</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            <div class="col-6 col-md-3">
+                <label for="sort" class="form-label">Sort by</label>
+                <select id="sort" name="sort" class="form-select">
+                    <option value="title_asc" <%= filters.sort === 'title_asc' ? 'selected' : '' %>>Title (A–Z)</option>
+                    <option value="title_desc" <%= filters.sort === 'title_desc' ? 'selected' : '' %>>Title (Z–A)</option>
+                    <option value="rating_desc" <%= filters.sort === 'rating_desc' ? 'selected' : '' %>>Highest rated</option>
+                    <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest additions</option>
+                </select>
+            </div>
+
+            <div class="col-6 col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill">Search</button>
+                <a href="/search" class="btn btn-outline-secondary flex-fill">Clear</a>
+            </div>
+        </div>
+    </form>
+
+    <p class="text-muted">
+        <% if (hasSearched) { %>
+            <%= games.length %> game<%= games.length === 1 ? '' : 's' %> matched your search.
+        <% } else { %>
+            Showing the full catalogue. Use the filters above to narrow it down.
+        <% } %>
+    </p>
+
+    <% if (!games || games.length === 0) { %>
+
+        <div class="alert alert-info">
+            No games matched your search. Try clearing a filter or using a different keyword.
+        </div>
+
+    <% } else { %>
+
+        <div class="row g-4">
+
+            <% games.forEach(game => { %>
+
+                <div class="col-sm-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <% if (game.image_url) { %>
+
+                            <img
+                                src="<%=
+                                    game.image_url.startsWith('http')
+                                        ? game.image_url
+                                        : '/images/' + game.image_url
+                                %>"
+                                class="card-img-top game-card-image"
+                                alt="<%= game.title %>"
+                            >
+
+                        <% } else { %>
+
+                            <div class="game-image-placeholder">
+                                No image available
+                            </div>
+
+                        <% } %>
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <h2 class="card-title h4 mb-0">
+                                    <%= game.title %>
+                                </h2>
+
+                                <% if (game.availability === 'available') { %>
+                                    <span class="badge bg-success">Available</span>
+                                <% } else { %>
+                                    <span class="badge bg-danger">Unavailable</span>
+                                <% } %>
+                            </div>
+
+                            <p class="card-text mb-2">
+                                <strong>Genre:</strong>
+                                <%= game.genre || 'Not specified' %>
+                            </p>
+
+                            <p class="card-text mb-2">
+                                <strong>Players:</strong>
+                                <% if (game.min_players != null && game.max_players != null) { %>
+                                    <%= game.min_players === game.max_players
+                                        ? game.min_players
+                                        : game.min_players + '–' + game.max_players %>
+                                <% } else { %>
+                                    Not specified
+                                <% } %>
+                            </p>
+
+                            <p class="card-text mb-2">
+                                <strong>Difficulty:</strong>
+                                <span class="text-capitalize"><%= game.difficulty || 'Not specified' %></span>
+                            </p>
+
+                            <p class="card-text mb-2 game-rating" aria-label="Rating">
+                                <strong>Rating:</strong>
+                                <% if (Number(game.review_count) > 0) { %>
+                                    <span class="rating-stars" aria-hidden="true">★</span>
+                                    <%= Number(game.average_rating).toFixed(1) %>/5
+                                    <span class="text-muted">
+                                        (<%= game.review_count %> review<%= Number(game.review_count) === 1 ? '' : 's' %>)
+                                    </span>
+                                <% } else { %>
+                                    <span class="text-muted">No reviews yet</span>
+                                <% } %>
+                            </p>
+
+                        </div>
+
+                        <div class="card-footer bg-white border-0 pb-3">
+                            
+                                href="/games/<%= game.game_id %>"
+                                class="btn btn-primary w-100"
+                                aria-label="View details for <%= game.title %>"
+                            >
+                                View Details
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } %>
+
+</main>
+
+<%- include('../partials/footer') %>

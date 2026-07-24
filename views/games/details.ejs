@@ -125,7 +125,26 @@
                             <span class="btn btn-secondary disabled">
                                 Currently Unavailable
                             </span>
+                        <% } else if (user.role === 'admin') { %>
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="/games/edit/<%= game.game_id %>" class="btn btn-outline-primary">Edit Game</a>
+                                
+                                <% if (game.archived) { %>
+                                    <form action="/games/unretire/<%= game.game_id %>" method="POST" class="m-0">
+                                        <button type="submit" class="btn btn-success">Unretire Game</button>
+                                    </form>
+                                <% } else { %>
+                                    <form action="/games/retire/<%= game.game_id %>" method="POST" class="m-0">
+                                        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to retire this game? It will hide it from the public catalog.')">Retire</button>
+                                    </form>
+                                <% } %>
 
+                                <form action="/games/delete/<%= game.game_id %>" method="POST" class="m-0">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('WARNING: Permanent Delete! Use Retire instead if this game was ever borrowed. Continue?')">Delete</button>
+                                </form>
+                            </div>
+                        <% } %>
+                        
                         <% if (user && user.role === 'member') { %>
                             <div class="mt-3">
                                 <% if (isWishlisted) { %>
@@ -157,46 +176,8 @@
                                     </form>
                                 <% } %>
                             </div>
-                        <% if (isWishlisted) { %>
-
-                            <form
-                                 action="/wishlist/game/<%= game.game_id %>/remove"
-                                method="POST"
-                                class="d-inline"
-        >
-                            <button
-                                type="submit"
-                                class="btn btn-outline-danger ms-2"
-                                onclick="return confirm('Are you sure you want to remove this game from your wishlist?');"
-                            >
-                                Remove from Wishlist
-                        </button>
-                        </form>
-                        
-                        <% } else if (user.role === 'admin') { %>
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="/games/edit/<%= game.game_id %>" class="btn btn-outline-primary">Edit Game</a>
-                                
-                                <% if (game.archived) { %>
-                                    <form action="/games/unretire/<%= game.game_id %>" method="POST" class="m-0">
-                                        <button type="submit" class="btn btn-success">Unretire Game</button>
-                                    </form>
-                                <% } else { %>
-                                    <form action="/games/retire/<%= game.game_id %>" method="POST" class="m-0">
-                                        <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to retire this game? It will hide it from the public catalog.')">Retire</button>
-                                    </form>
-                                <% } %>
-
-                                <form action="/games/delete/<%= game.game_id %>" method="POST" class="m-0">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('WARNING: Permanent Delete! Use Retire instead if this game was ever borrowed. Continue?')">Delete</button>
-                                </form>
-                            </div>
                         <% } %>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <section class="reviews-section mt-5" aria-labelledby="reviews-title">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">

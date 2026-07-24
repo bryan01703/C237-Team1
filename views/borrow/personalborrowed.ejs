@@ -2,7 +2,7 @@
 
 <main class="container py-5">
 
-    <div class="mb-4">
+<div class="mb-4">
 
         <h1 class="fw-bold">
             My Borrowed Games
@@ -13,6 +13,15 @@
         </p>
 
     </div>
+
+    <form method="GET" action="/borrow/mine" class="mb-4" style="max-width: 260px;">
+        <label for="status" class="form-label">Filter by status</label>
+        <select id="status" name="status" class="form-select" onchange="this.form.submit()">
+            <option value="" <%= status === '' ? 'selected' : '' %>>All</option>
+            <option value="active" <%= status === 'active' ? 'selected' : '' %>>Active only</option>
+            <option value="returned" <%= status === 'returned' ? 'selected' : '' %>>Returned only</option>
+        </select>
+    </form>
 
     <% if (!borrowedGames || borrowedGames.length === 0) { %>
 

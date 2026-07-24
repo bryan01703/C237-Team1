@@ -14,7 +14,7 @@
                         <div class="alert alert-danger"><%= error[0] %></div>
                     <% } %>
 
-                    <form action="/games/edit/<%= game.game_id %>" method="POST">
+                    <form action="/games/edit/<%= game.game_id %>" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label fw-bold">Game Title <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="title" name="title" value="<%= game.title %>" required>
@@ -52,8 +52,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="image_url" class="form-label fw-bold">Image URL</label>
-                            <input type="text" class="form-control" id="image_url" name="image_url" value="<%= game.image_url %>">
+                            <label for="image" class="form-label fw-bold">Update Image <span class="hint">(Leave empty to keep current)</span></label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/jpeg, image/png">
+                            <input type="hidden" name="existing_image" value="<%= game.image_url %>">
                         </div>
 
                         <div class="mb-4">

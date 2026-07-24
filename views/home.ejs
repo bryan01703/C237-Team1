@@ -39,6 +39,39 @@
         </div>
     </section>
 
+    <hr style="border: 0; border-top: 1px solid var(--card-line); max-width: 1000px;">
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        <p class="hero-eyebrow">LIVE ANALYTICS</p>
+        <h2>Community Stats</h2>
+    </div>
+
+    <!-- dashboard stats -->
+    <section class="catalog-grid" style="padding-top: 0;">
+        <div class="index-card" style="text-align: center;">
+            <span class="card-no">GAMES</span>
+            <h3 style="font-size: 2.5rem; margin: 10px 0;"><%= stats.totalGames %></h3>
+            <p>Available in library</p>
+        </div>
+        <div class="index-card" style="text-align: center;">
+            <span class="card-no">MEMBERS</span>
+            <h3 style="font-size: 2.5rem; margin: 10px 0;"><%= stats.totalMembers %></h3>
+            <p>Active club members</p>
+        </div>
+        <div class="index-card" style="text-align: center;">
+            <span class="card-no">BORROWS</span>
+            <h3 style="font-size: 2.5rem; margin: 10px 0;"><%= stats.totalBorrows %></h3>
+            <p>All-time borrows</p>
+        </div>
+        <div class="index-card tile-admin" style="text-align: center;">
+            <span class="card-no">POPULAR</span>
+            <h3 title="<%= stats.popularGame %>" style="font-size: 1.5rem; margin: 15px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <%= stats.popularGame %>
+            </h3>
+            <p>Most borrowed</p>
+        </div>
+    </section>
+
     <%- include('partials/footer') %>
 </body>
 </html>

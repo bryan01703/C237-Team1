@@ -340,12 +340,40 @@ router.post('/admin/users/edit/:id', isAdmin, async (req, res) => {
     }
 });
 
-//public landing page 
-router.get('/', (req, res) => {
-    if (req.session.user) {
-        return res.redirect('/dashboard');
+// public landing page with analytics
+router.get('/', async (req, res) => {
+    try {
+        const [
+            [gamesResult],
+            [usersResult],
+            [borrowsResult],
+            [popularResult]
+        ] = await Promise.all([
+            db.query('SELECT COUNT(*) AS count FROM games WHERE archived = FALSE'),
+            db.query("SELECT COUNT(*) AS count FROM users WHERE role = 'member'"),
+            db.query('SELECT COUNT(*) AS count FROM borrow_records'),
+            db.query(`
+                SELECT g.title, COUNT(br.game_id) AS borrow_count 
+                FROM borrow_records br 
+                JOIN games g ON br.game_id = g.game_id 
+                GROUP BY br.game_id 
+                ORDER BY borrow_count DESC LIMIT 1
+            `)
+        ]);
+
+        const topGame = popularResult.length > 0 ? popularResult[0].title : 'No borrows yet';
+        const stats = {
+            totalGames: gamesResult[0].count,
+            totalMembers: usersResult[0].count,
+            totalBorrows: borrowsResult[0].count,
+            popularGame: topGame
+        };
+
+        res.render('home', { stats }); // Renders his themed page with your data
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+        res.render('home', { stats: { totalGames: 0, totalMembers: 0, totalBorrows: 0, popularGame: 'N/A' }});
     }
-    res.render('home');
 });
 
 // dashboard post login

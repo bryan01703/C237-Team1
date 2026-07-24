@@ -14,7 +14,7 @@ function validPositiveId(value) {
     return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
-// game availability and sorting options
+// GET /wishlist/mine - a member's saved games, available or not.
 router.get('/mine', isLoggedIn, async (req, res) => {
     try {
         const [entries] = await db.query(`
@@ -35,7 +35,7 @@ router.get('/mine', isLoggedIn, async (req, res) => {
     }
 });
 
-// save game to wishlist by gameId
+// POST /wishlist/:gameId - save a game to the wishlist (any game, any time).
 router.post('/:gameId', isLoggedIn, async (req, res) => {
     const gameId = validPositiveId(req.params.gameId);
 
@@ -84,7 +84,7 @@ router.post('/:gameId', isLoggedIn, async (req, res) => {
     }
 });
 
-// remove wishlist entry by wishlistId
+// POST /wishlist/remove/:wishlistId - remove a saved game from the wishlist (from /wishlist/mine).
 router.post('/remove/:wishlistId', isLoggedIn, async (req, res) => {
     const wishlistId = validPositiveId(req.params.wishlistId);
 
@@ -113,7 +113,7 @@ router.post('/remove/:wishlistId', isLoggedIn, async (req, res) => {
     res.redirect('/wishlist/mine');
 });
 
-// Remove game from wishlist
+// POST /wishlist/game/:gameId/remove - remove a saved game from the game details page (by game id, not wishlist id).
 router.post('/game/:gameId/remove', isLoggedIn, async (req, res) => {
     const gameId = validPositiveId(req.params.gameId);
 

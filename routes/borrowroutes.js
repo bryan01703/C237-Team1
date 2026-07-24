@@ -11,17 +11,27 @@ router.post('/:id', isLoggedIn, (req, res) => {
 
 // Display the member's borrowing history.
 router.get('/mine', isLoggedIn, async (req, res) => {
+    const status = ['active', 'returned'].includes(req.query.status) ? req.query.status : '';
+
     try {
+        const conditions = ['br.user_id = ?'];
+        const params = [req.session.user.id];
+
+        if (status) {
+            conditions.push('br.status = ?');
+            params.push(status);
+        }
+
         const [borrowedGames] = await db.query(
             `SELECT br.*, g.title
              FROM borrow_records br
              JOIN games g ON br.game_id = g.game_id
-             WHERE br.user_id = ?
+             WHERE ${conditions.join(' AND ')}
              ORDER BY br.borrow_date DESC`,
-            [req.session.user.id]
+            params
         );
 
-        res.render('borrow/personalborrowed', { borrowedGames });
+        res.render('borrow/personalborrowed', { borrowedGames, status });
     } catch (error) {
         console.error('Error loading borrowed games:', error);
         req.flash('error', 'Could not load your borrowed games.');

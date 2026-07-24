@@ -40,9 +40,14 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
     const { title, genre, min_players, max_players, difficulty, game_condition, description } = req.body;
     // get filename from multer, or use placeholder if no file uploaded
     const image_url = req.file ? req.file.filename : 'placeholder.jpg';
+router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
+    const { title, genre, min_players, max_players, difficulty, game_condition, description } = req.body;
+    // get filename from multer, or use placeholder if no file uploaded
+    const image_url = req.file ? req.file.filename : 'placeholder.jpg';
 
     try {
         await db.query(
+            `INSERT INTO games (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
             `INSERT INTO games (title, genre, min_players, max_players, difficulty, game_condition, description, image_url) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
             [title, genre, min_players, max_players, difficulty, game_condition, description, image_url]
@@ -52,6 +57,7 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('Error adding game:', error.message);
         req.flash('error', 'Failed to add game.');
+        req.flash('error', 'Failed to add game.');
         res.redirect('/games/add');
     }
 });
@@ -59,6 +65,8 @@ router.post('/add', isAdmin, upload.single('image'), async (req, res) => {
 // show edit game form
 router.get('/edit/:id', isAdmin, async (req, res) => {
     try {
+        const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [req.params.id]);
+        if (games.length === 0) return res.redirect('/games');
         const [games] = await db.query('SELECT * FROM games WHERE game_id = ?', [req.params.id]);
         if (games.length === 0) return res.redirect('/games');
         res.render('games/editgame', { game: games[0] });
@@ -133,8 +141,7 @@ router.post('/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-// PUBLIC READ ROUTES (Function C)
-// A game becomes unavailable when an active borrow record exists.
+// public routes
 const availabilitySql = `CASE WHEN EXISTS (
     SELECT 1 FROM borrow_records br WHERE br.game_id = g.game_id AND br.status = 'active'
 ) THEN 'unavailable' ELSE 'available' END`;
@@ -194,8 +201,16 @@ router.get('/:id', async (req, res) => {
             WHERE r.game_id = ?
             ORDER BY r.updated_at DESC
         `, [req.params.id]);
+        let isWishlisted = false;
+        if (req.session.user) {
+            const [wishlistRows] = await db.query(
+                'SELECT wishlist_id FROM wishlist WHERE game_id = ? AND user_id = ?',
+                [req.params.id, req.session.user.id]
+            );
+            isWishlisted = wishlistRows.length > 0;
+        }
 
-        return res.render('games/details', { game: games[0], reviews });
+        return res.render('games/details', { game: games[0], reviews, isWishlisted });
     } catch (error) {
         return res.status(500).send('Error');
     }

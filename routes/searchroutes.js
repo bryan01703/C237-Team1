@@ -1,3 +1,7 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../config/db');
+
 // checking availability in SQL
 const express = require('express');
 const router = express.Router(); 

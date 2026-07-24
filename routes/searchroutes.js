@@ -1,4 +1,8 @@
 // checking availability in SQL
+const express = require('express');
+const router = express.Router(); 
+const db = require('../config/db');
+
 const availabilitySql = `CASE WHEN EXISTS (
     SELECT 1 FROM borrow_records br
     WHERE br.game_id = g.game_id AND br.status = 'active'

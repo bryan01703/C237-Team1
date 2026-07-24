@@ -1,3 +1,7 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../config/db');
+
 // checking availability in SQL
 const availabilitySql = `CASE WHEN EXISTS (
     SELECT 1 FROM borrow_records br

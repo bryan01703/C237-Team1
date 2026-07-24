@@ -52,11 +52,14 @@ const gameroutes = require('./routes/gameroutes');
 const borrowroutes = require('./routes/borrowroutes');
 const searchroutes = require('./routes/searchroutes');
 const reviewroutes = require('./routes/reviewroutes');
+const wishlistroutes = require('./routes/wishlistroutes');
 
 app.use('/games', gameroutes);
 app.use('/borrow', borrowroutes);
 app.use('/search', searchroutes);
 app.use('/reviews', reviewroutes);
+app.use('/wishlist', wishlistroutes);
+
 
 // homepage with data analytics
 app.get('/', async (req, res) => {
@@ -108,4 +111,8 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+
+app.get('/search', (req, res) => {
+    res.render('search', { games: [], query: req.query.q || '' });
 });
